@@ -10,6 +10,22 @@ if (!refParam) {
 
 let currentUser = null;
 
+// ── Timezone helper ───────────────────────────────────────────────────────────
+// Postgres returns timestamps in UTC without a timezone marker.
+// This helper converts them to Philippine local time for display.
+function formatPHDate(utcString) {
+  if (!utcString) return "";
+  let iso = String(utcString).includes("T") ? utcString : String(utcString).replace(" ", "T");
+  if (!iso.endsWith("Z") && !/[+-]\d{2}:?\d{2}$/.test(iso)) iso += "Z";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return utcString;
+  return d.toLocaleString("en-PH", {
+    timeZone: "Asia/Manila",
+    year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", hour12: false
+  });
+}
+
 async function load() {
   msgEl.textContent = "Loading...";
   const url = `/eserbisyo-hub/api/public/staff/get_request.php?ref=${encodeURIComponent(refParam)}`;
@@ -46,7 +62,7 @@ async function load() {
   hist.innerHTML = '';
   (data.history || []).forEach(h => {
     const li = document.createElement('li');
-    li.textContent = `${h.changed_at} — ${h.new_status} (${h.changed_by})${h.note ? ' - ' + h.note : ''}`;
+    li.textContent = `${formatPHDate(h.changed_at)} — ${h.new_status} (${h.changed_by})${h.note ? ' - ' + h.note : ''}`;
     hist.appendChild(li);
   });
 
@@ -54,7 +70,7 @@ async function load() {
   sms.innerHTML = '';
   (data.sms_logs || []).forEach(s => {
     const li = document.createElement('li');
-    li.textContent = `${s.sent_at} — ${s.status} to ${s.recipient_mobile}: ${s.message}`;
+    li.textContent = `${formatPHDate(s.sent_at)} — ${s.status} to ${s.recipient_mobile}: ${s.message}`;
     sms.appendChild(li);
   });
 
@@ -67,7 +83,7 @@ async function postJSON(url, payload) {
 
 // Print
 document.getElementById('btnPrint').addEventListener('click', () => {
-  window.print(); // opens the browser print dialog [web:147]
+  window.print();
 });
 
 // Logout

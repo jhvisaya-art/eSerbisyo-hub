@@ -16,6 +16,23 @@ let currentRef          = null;
 let currentPage         = 1;
 let totalPages          = 1;
 
+// ── Timezone helper ───────────────────────────────────────────────────────────
+// Postgres returns timestamps in UTC without a timezone marker.
+// This helper converts them to Philippine local time for display.
+function formatPHDate(utcString) {
+  if (!utcString) return "";
+  // Normalize: convert "2026-05-20 11:11:09" → "2026-05-20T11:11:09Z"
+  let iso = String(utcString).includes("T") ? utcString : String(utcString).replace(" ", "T");
+  if (!iso.endsWith("Z") && !/[+-]\d{2}:?\d{2}$/.test(iso)) iso += "Z";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return utcString; // fallback if parse fails
+  return d.toLocaleString("en-PH", {
+    timeZone: "Asia/Manila",
+    year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", hour12: false
+  });
+}
+
 // ── DOM refs ──────────────────────────────────────────────────────────────────
 const rowsEl       = document.getElementById("rows");
 const msgEl        = document.getElementById("msg");
@@ -62,7 +79,7 @@ function renderHistory(history) {
   if (!history || history.length === 0) return "No history yet";
   return history.slice(0, 20).map(h => {
     const note = h.note ? ` — ${h.note}` : "";
-    return `${h.changed_at} · ${h.new_status}${note}`;
+    return `${formatPHDate(h.changed_at)} · ${h.new_status}${note}`;
   }).join("\n");
 }
 
@@ -157,7 +174,7 @@ async function loadModal(ref) {
     document.getElementById("mName").textContent     = [r.first_name, r.middle_name, r.last_name].filter(Boolean).join(" ").replace(/\s+/g, " ").trim();
     document.getElementById("mService").textContent  = r.service_code;
     document.getElementById("mMobile").textContent   = r.mobile_no;
-    document.getElementById("mDate").textContent     = r.created_at;
+    document.getElementById("mDate").textContent     = formatPHDate(r.created_at);
     document.getElementById("mAddress").textContent  = r.address_line || "—";
     document.getElementById("mHistory").textContent  = renderHistory(data.history);
 
@@ -249,7 +266,7 @@ async function loadList() {
         <td><strong>${r.reference_no}</strong>${archived ? ' <span class="pill" style="font-size:0.7rem;color:#888;">Archived</span>' : ""}</td>
         <td>${fullName}</td>
         <td>${r.service_code}</td>
-        <td>${r.created_at}</td>
+        <td>${formatPHDate(r.created_at)}</td>
         <td>${statusBadgeHTML(r.status)}</td>
         <td>${paymentBadgeHTML(r.payment_status)}</td>
         <td class="noWrap"><button type="button" class="btn mini" data-open-ref="${r.reference_no}">Open</button></td>`;
@@ -285,10 +302,18 @@ async function exportReleased() {
     const all  = data?.data || [];
 
     // Filter to selected month/year client-side
+    // Parse the timestamp as UTC, then check its month/year in Philippine time.
     const records = all.filter(r => {
-      const d = new Date(r.created_at);
-      return String(d.getMonth() + 1).padStart(2, "0") === month &&
-             String(d.getFullYear()) === String(year);
+      let iso = String(r.created_at).includes("T") ? r.created_at : String(r.created_at).replace(" ", "T");
+      if (!iso.endsWith("Z") && !/[+-]\d{2}:?\d{2}$/.test(iso)) iso += "Z";
+      const d = new Date(iso);
+      // Get PH-local month/year via Intl
+      const parts = new Intl.DateTimeFormat("en-PH", {
+        timeZone: "Asia/Manila", year: "numeric", month: "2-digit"
+      }).formatToParts(d);
+      const m = parts.find(p => p.type === "month")?.value;
+      const y = parts.find(p => p.type === "year")?.value;
+      return m === month && y === String(year);
     });
 
     if (!records.length) { alert(`No Released records found for ${monthLabel} ${year}.`); return; }
@@ -310,7 +335,7 @@ async function exportReleased() {
       "Last Name": r.last_name, "First Name": r.first_name, "Middle Name": r.middle_name || "",
       "Service": SERVICE_LABELS[r.service_code] || r.service_code,
       "Mobile No.": r.mobile_no, "Payment Status": r.payment_status,
-      "Date Filed": r.created_at, "Status": r.status,
+      "Date Filed": formatPHDate(r.created_at), "Status": r.status,
     }));
     const wsRecords = XLSX.utils.json_to_sheet(rows);
     wsRecords["!cols"] = [
@@ -331,7 +356,7 @@ async function exportReleased() {
       ["eSerbisyo Hub — Monthly Released Records Summary"],
       ["Municipality of San Fernando, Camarines Sur"],
       [`Period: ${monthLabel} ${year}`],
-      [`Generated: ${new Date().toLocaleString("en-PH")}`],
+      [`Generated: ${new Date().toLocaleString("en-PH", { timeZone: "Asia/Manila" })}`],
       [], ["OVERVIEW"],
       ["Total Released", records.length], ["Paid", paidCount], ["Unpaid", records.length - paidCount],
       [], ["BREAKDOWN BY SERVICE"], ["Service", "Count"],
