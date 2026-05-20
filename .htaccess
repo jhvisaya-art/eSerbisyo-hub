@@ -3,5 +3,3 @@ RewriteEngine On
 # Internal rewrite: strip /eserbisyo-hub/ prefix without telling the browser
 RewriteRule ^eserbisyo-hub/(.*)$ /$1 [L]
 
-# Internal rewrite: bare root serves the kiosk landing
-RewriteRule ^$ client/kiosk/pages/index.html [L]
