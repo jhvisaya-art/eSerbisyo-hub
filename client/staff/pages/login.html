@@ -1,0 +1,79 @@
+<!-- FILE: C:\xampp\htdocs\eserbisyo-hub\client\staff\pages\login.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>eSerbisyo Hub - Staff Login</title>
+
+  <link rel="stylesheet" href="../assets/css/staff.css" />
+</head>
+
+<body>
+  <header class="appHeader">
+    <div class="brand">
+      <img class="brandLockup" src="../assets/img/eserbisyo-lockup-light.png" alt="eSerbisyo Hub" />
+    </div>
+
+    <div class="headerRight"></div>
+  </header>
+
+  <main class="shell">
+    <section class="panel loginPanel" aria-label="Staff login panel">
+      <div class="panel__head">
+        <img
+          class="panel__logo"
+          src="../assets/img/eserbisyo-mark-light.png"
+          alt="eSerbisyo Hub logo"
+          loading="lazy"
+          width="72"
+          height="72"
+        />
+        <h1 class="panel__title">Staff Login</h1>
+        <p class="panel__subtitle">For authorized municipal staff only</p>
+      </div>
+
+      <div class="alert" role="note" aria-label="Restricted access notice">
+        <div class="alert__title">Restricted Access</div>
+        <div class="alert__text">
+          Use your issued staff credentials. Unauthorized access attempts may be logged.
+        </div>
+      </div>
+
+      <form class="form" id="loginForm" autocomplete="on" novalidate>
+        <div class="field">
+          <label class="label" for="username">Username <span aria-hidden="true">*</span></label>
+          <input
+            class="input"
+            id="username"
+            name="username"
+            type="text"
+            autocomplete="username"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label class="label" for="password">Password <span aria-hidden="true">*</span></label>
+          <input
+            class="input"
+            id="password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+
+        <button class="btnPrimary" type="submit">Sign In</button>
+        <p class="msg" id="msg" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <a class="backHome" href="../../kiosk/pages/index.html">&larr; Back to Home</a>
+  </main>
+
+  <script src="../assets/js/a11y-prefs.js"></script>
+  <script src="../assets/js/login.js"></script>
+</body>
+</html>

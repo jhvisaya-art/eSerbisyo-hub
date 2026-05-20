@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>eSerbisyo Hub - Request</title>
+  <link rel="stylesheet" href="../assets/css/kiosk.css" />
+</head>
+<body>
+  <header class="appHeader">
+    <div class="brand">
+      <img class="brandLockup" src="../assets/img/eserbisyo-lockup-light.png" alt="eSerbisyo Hub" />
+    </div>
+      <div class="kioskHeaderRight"></div>
+    </header>
+
+  <main class="kioskMain kioskMain--center">
+    <section class="kioskSteps">
+      <ol class="kioskStepList">
+        <li class="kioskStep is-active"><span class="kioskStepNumber">1</span><span class="kioskStepLabel">Service &amp; Info</span></li>
+        <li class="kioskStep"><span class="kioskStepNumber">2</span><span class="kioskStepLabel">Details</span></li>
+        <li class="kioskStep"><span class="kioskStepNumber">3</span><span class="kioskStepLabel">Confirm &amp; Print</span></li>
+      </ol>
+    </section>
+
+    <section class="kioskIntro">
+      <p class="kioskStepKicker">Step 1 of 3: Choose Service and Review Information</p>
+      <h1 class="kioskPageTitle">Request Documents &amp; Renewals</h1>
+      <p class="kioskPageSub">
+        Select the document or service you want to request / Piliin ang dokumento o serbisyong kailangan.
+      </p>
+    </section>
+
+    <section class="kioskServiceGrid kioskServiceGrid--six" aria-label="Service selection">
+      <button type="button" class="kioskServiceCard" data-service-code="CEDULA">
+        <div class="kioskServiceIcon" aria-hidden="true">
+          <img src="../assets/img/icons/credit-card.png" alt="" />
+        </div>
+        <div class="kioskServiceBody">
+          <h2 class="kioskServiceTitle">Community Tax Certificate (Cedula)</h2>
+          <p class="kioskServiceDesc">Annual tax certificate for residents and businesses.</p>
+          <p class="kioskServiceFee">Fee: PHP 50 - PHP 500</p>
+        </div>
+      </button>
+
+      <button type="button" class="kioskServiceCard" data-service-code="MAYOR_CLEARANCE">
+        <div class="kioskServiceIcon" aria-hidden="true">
+          <img src="../assets/img/icons/verified.png" alt="" />
+        </div>
+        <div class="kioskServiceBody">
+          <h2 class="kioskServiceTitle">Mayor's Clearance</h2>
+          <p class="kioskServiceDesc">Certificate of good moral character and residency.</p>
+          <p class="kioskServiceFee">Fee: PHP 100</p>
+        </div>
+      </button>
+
+      <button type="button" class="kioskServiceCard" data-service-code="CTC_BIRTH">
+        <div class="kioskServiceIcon" aria-hidden="true">
+          <img src="../assets/img/icons/copy.png" alt="" />
+        </div>
+        <div class="kioskServiceBody">
+          <h2 class="kioskServiceTitle">Certified True Copy</h2>
+          <p class="kioskServiceDesc">Birth, Marriage, or Death Certificate</p>
+          <p class="kioskServiceFee">Fee: PHP 150 - PHP 200</p>
+        </div>
+      </button>
+
+      <button type="button" class="kioskServiceCard" data-service-code="DELAYED_REG">
+        <div class="kioskServiceIcon" aria-hidden="true">
+          <img src="../assets/img/icons/pocket-watch.png" alt="" />
+        </div>
+        <div class="kioskServiceBody">
+          <h2 class="kioskServiceTitle">Delayed Registration</h2>
+          <p class="kioskServiceDesc">Late registration of birth or other civil documents.</p>
+          <p class="kioskServiceFee">Fee: Varies</p>
+        </div>
+      </button>
+
+      <button type="button" class="kioskServiceCard" data-service-code="BUSINESS_RENEWAL">
+        <div class="kioskServiceIcon" aria-hidden="true">
+          <img src="../assets/img/icons/store.png" alt="" />
+        </div>
+        <div class="kioskServiceBody">
+          <h2 class="kioskServiceTitle">Business Permit Renewal</h2>
+          <p class="kioskServiceDesc">Annual renewal of business operating permit.</p>
+          <p class="kioskServiceFee">Fee: Varies</p>
+        </div>
+      </button>
+
+      <button type="button" class="kioskServiceCard" data-service-code="OTHER_RENEWAL">
+        <div class="kioskServiceIcon" aria-hidden="true">
+          <img src="../assets/img/icons/sync.png" alt="" />
+        </div>
+        <div class="kioskServiceBody">
+          <h2 class="kioskServiceTitle">Other Renewal Requests</h2>
+          <p class="kioskServiceDesc">Tricycle permits, vendor permits, and other renewals.</p>
+          <p class="kioskServiceFee">Fee: Varies</p>
+        </div>
+      </button>
+    </section>
+
+    <div class="kioskBottomActions">
+      <button type="button" class="btn kioskBackBtn" onclick="window.location.href='index.html'">
+        &larr; Back to Home / Bumalik
+      </button>
+    </div>
+
+    <div class="kioskOverlay" id="infoOverlay" hidden>
+      <div class="kioskPanel kioskSuccessPanel" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+        <header class="kioskPanelHead" style="text-align:center;">
+          <div class="pill" id="infoCategory">Selected Service</div>
+          <h2 class="kioskPanelTitle" id="infoTitle" style="margin-top:0.6rem;">Service</h2>
+          <p class="kioskPanelSub" id="infoDesc">Description</p>
+        </header>
+
+        <div class="kioskInfoGrid">
+          <div class="kioskInfoBox kioskInfoBox--blue">
+            <div class="kioskInfoLabel">Fee / Bayad</div>
+            <div class="kioskInfoValue" id="infoFee">-</div>
+          </div>
+          <div class="kioskInfoBox kioskInfoBox--green">
+            <div class="kioskInfoLabel">Processing Time</div>
+            <div class="kioskInfoValue" id="infoTime">-</div>
+          </div>
+          <div class="kioskInfoBox kioskInfoBox--yellow">
+            <div class="kioskInfoLabel">Requirements</div>
+            <div class="kioskInfoValue"><span id="infoReqCount">0</span> items</div>
+          </div>
+        </div>
+
+        <hr class="kioskHr" />
+
+        <section>
+          <h3 class="kioskSectionTitle">Required Documents / Mga Kinakailangan:</h3>
+          <ol class="kioskNumberList" id="infoReqList"></ol>
+        </section>
+
+        <section style="margin-top:1rem;">
+          <h3 class="kioskSectionTitle">Process Steps / Hakbang:</h3>
+          <ol class="kioskNumberList kioskNumberList--blue" id="infoStepList"></ol>
+        </section>
+
+        <div class="kioskFormActions" style="margin-top:1.25rem;">
+          <button type="button" class="btn ghost" id="btnInfoBack">Back</button>
+          <button type="button" class="btn primary" id="btnInfoContinue">Continue to Details</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="kioskFooter">
+    <div class="kioskFooterLinks">
+      <a href="#">Help &amp; Support</a> &bull; <a href="#">Privacy Notice</a>
+    </div>
+    <div class="kioskFooterCopy">&copy; 2026 Municipal Government. All rights reserved.</div>
+  </footer>
+
+  <script src="../../staff/assets/js/a11y-prefs.js"></script>
+  <script>
+    const SERVICE_INFO = {
+      CEDULA: {
+        category: 'Civil Registry / Treasurer',
+        title: 'Community Tax Certificate (Cedula)',
+        desc: 'Annual tax certificate for residents and businesses.',
+        fee: 'PHP 50 - PHP 500 (based on income)',
+        time: '15-30 minutes',
+        requirements: [
+          'Valid government-issued ID',
+          'Proof of income or Barangay Clearance',
+          'Previous Cedula (if renewal)'
+        ],
+        steps: [
+          'Review requirements in this modal',
+          'Continue to Details and complete the request form',
+          'Confirm and print the generated slip'
+        ]
+      },
+      MAYOR_CLEARANCE: {
+        category: 'Clearance / Mayor\'s Office',
+        title: 'Mayor\'s Clearance',
+        desc: 'Certificate of good moral character and residency.',
+        fee: 'PHP 100',
+        time: '20-40 minutes',
+        requirements: [
+          'Valid government-issued ID',
+          'Proof of residency',
+          'Barangay Clearance (if required)'
+        ],
+        steps: [
+          'Review requirements in this modal',
+          'Continue to Details and complete the request form',
+          'Confirm and print the generated slip'
+        ]
+      },
+      CTC_BIRTH: {
+        category: 'Local Civil Registry',
+        title: 'Certified True Copy (Civil Registry Record)',
+        desc: 'Request for certified copy of municipal civil registry records.',
+        fee: 'PHP 150 - PHP 200',
+        time: '30-60 minutes',
+        requirements: [
+          'Valid government-issued ID of requester',
+          'Authorization letter + ID (if representative)',
+          'Record details (name, date, place)'
+        ],
+        steps: [
+          'Review requirements in this modal',
+          'Continue to Details and complete the request form',
+          'Confirm and print the generated slip'
+        ]
+      },
+      DELAYED_REG: {
+        category: 'Local Civil Registry',
+        title: 'Delayed Registration',
+        desc: 'Late registration of birth or other civil documents.',
+        fee: 'Varies',
+        time: 'Varies',
+        requirements: [
+          'Valid government-issued ID',
+          'Supporting documents for delayed registration',
+          'Registrar forms or affidavit as required'
+        ],
+        steps: [
+          'Review requirements in this modal',
+          'Continue to Details and complete the request form',
+          'Confirm and print the generated slip'
+        ]
+      },
+      BUSINESS_RENEWAL: {
+        category: 'Business Permits',
+        title: 'Business Permit Renewal',
+        desc: 'Annual renewal of business operating permit.',
+        fee: 'Varies',
+        time: 'Varies',
+        requirements: [
+          'Previous business permit',
+          'Barangay Business Clearance (if required)',
+          'Supporting renewal documents'
+        ],
+        steps: [
+          'Review requirements in this modal',
+          'Continue to Details and complete the request form',
+          'Confirm and print the generated slip'
+        ]
+      },
+      OTHER_RENEWAL: {
+        category: 'Permits and Renewals',
+        title: 'Other Renewal Requests',
+        desc: 'Tricycle permits, vendor permits, and other renewals.',
+        fee: 'Varies',
+        time: 'Varies',
+        requirements: [
+          'Valid government-issued ID',
+          'Previous permit or license',
+          'Supporting documents for permit type'
+        ],
+        steps: [
+          'Review requirements in this modal',
+          'Continue to Details and complete the request form',
+          'Confirm and print the generated slip'
+        ]
+      }
+    };
+
+    const infoOverlay = document.getElementById('infoOverlay');
+    let pendingServiceCode = '';
+
+    function openInfoModal(serviceCode) {
+      const info = SERVICE_INFO[serviceCode] || SERVICE_INFO.CEDULA;
+      pendingServiceCode = serviceCode;
+
+      document.getElementById('infoCategory').textContent = info.category;
+      document.getElementById('infoTitle').textContent = info.title;
+      document.getElementById('infoDesc').textContent = info.desc;
+      document.getElementById('infoFee').textContent = info.fee;
+      document.getElementById('infoTime').textContent = info.time;
+      document.getElementById('infoReqCount').textContent = String(info.requirements.length);
+
+      const reqList = document.getElementById('infoReqList');
+      reqList.innerHTML = '';
+      info.requirements.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        reqList.appendChild(li);
+      });
+
+      const stepList = document.getElementById('infoStepList');
+      stepList.innerHTML = '';
+      info.steps.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        stepList.appendChild(li);
+      });
+
+      infoOverlay.hidden = false;
+      document.body.classList.add('no-scroll');
+    }
+
+    function closeInfoModal() {
+      infoOverlay.hidden = true;
+      document.body.classList.remove('no-scroll');
+      pendingServiceCode = '';
+    }
+
+    document.getElementById('btnInfoBack').addEventListener('click', closeInfoModal);
+    document.getElementById('btnInfoContinue').addEventListener('click', () => {
+      const code = pendingServiceCode || 'CEDULA';
+      // Starting from Step 1 means a brand-new request: clear old draft/details.
+      sessionStorage.removeItem('requestRef');
+      sessionStorage.removeItem('requestLastName');
+      sessionStorage.removeItem('requestMobile');
+      sessionStorage.removeItem('lastSlip');
+      sessionStorage.removeItem('reviewConfirmed');
+      sessionStorage.setItem('selectedService', code);
+      sessionStorage.setItem('requestForm', JSON.stringify({ service_code: code }));
+      window.location.href = 'request-step2.html';
+    });
+
+    document.querySelectorAll('.kioskServiceCard').forEach(card => {
+      card.addEventListener('click', () => {
+        const code = card.dataset.serviceCode;
+        if (!code) return;
+        openInfoModal(code);
+      });
+    });
+  </script>
+</body>
+</html>

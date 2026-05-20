@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>eSerbisyo Hub - Track Request</title>
+  <link rel="stylesheet" href="../assets/css/kiosk.css" />
+</head>
+<body>
+<div class="kioskPage">
+  <header class="appHeader">
+    <div class="brand">
+      <img class="brandLockup" src="../assets/img/eserbisyo-lockup-light.png" alt="eSerbisyo Hub" />
+    </div>
+      <div class="kioskHeaderRight"></div>
+    </header>
+
+  <main class="kioskMain kioskMain--center">
+    <section class="kioskIntro">
+      <p class="kioskStepKicker">Track Request</p>
+      <h1 class="kioskPageTitle">Track My Request</h1>
+      <p class="kioskPageSub">Enter your reference number and verify using last name or mobile number.</p>
+    </section>
+
+    <!-- Search box -->
+    <section class="kioskPanel kioskTrackPanel">
+      <form class="kioskTrackForm" id="trackForm" novalidate>
+        <div class="kioskField">
+          <label for="refInput">Reference Number <span aria-hidden="true">*</span></label>
+          <input class="input kioskTrackInput" id="refInput" type="text" required
+                 placeholder="ES-YYYYMMDD-XXXXXX or ESH-XXXXXXXX" autocomplete="off" />
+          <div class="kioskFieldHint">Example: ES-20260106-B4E3CB or ESH-07341170</div>
+          <div class="kioskMsg" id="errRef" hidden>Please enter your reference number.</div>
+        </div>
+
+        <div class="kioskTrackVerifyGrid">
+          <div class="kioskField">
+            <label for="lastNameInput">Last Name (optional if Mobile is provided)</label>
+            <input class="input" id="lastNameInput" type="text" placeholder="Dela Cruz" autocomplete="family-name" />
+          </div>
+
+          <div class="kioskField">
+            <label for="mobileInput">Mobile No. (optional if Last Name is provided)</label>
+            <input class="input" id="mobileInput" type="tel" inputmode="numeric"
+                   placeholder="09XXXXXXXXX" autocomplete="tel-national"
+                   pattern="^(09)\\d{9}$" />
+            <div class="kioskMsg" id="errMobileFmt" hidden>Please enter a valid mobile number (09XXXXXXXXX).</div>
+          </div>
+        </div>
+
+        <div class="kioskMsg" id="errVerify" hidden>Please provide either Last Name or Mobile No.</div>
+
+        <div class="kioskTrackActions">
+          <button type="submit" class="btn primary kioskTrackBtn" id="btnTrack">Track</button>
+          <button type="button" class="btn ghost" id="btnHome">Return to Home</button>
+        </div>
+
+        <!-- Accessible status region -->
+        <div class="kioskTrackStatusMsg" id="statusMsg" role="status" aria-atomic="true"></div>
+      </form>
+    </section>
+
+    <!-- Result -->
+    <section class="kioskPanel kioskTrackResult" id="resultPanel" hidden aria-label="Tracking result">
+      <header class="kioskPanelHead">
+        <h2 class="kioskPanelTitle" style="margin:0;">Request Status</h2>
+        <p class="kioskPanelSub" id="resultSub" style="margin-top:0.35rem;">—</p>
+      </header>
+
+      <div class="kioskTrackMeta">
+        <div class="kioskTrackMetaRow">
+          <div class="kioskTrackMetaKey">Reference:</div>
+          <div class="kioskTrackMetaVal" id="metaRef">—</div>
+        </div>
+        <div class="kioskTrackMetaRow">
+          <div class="kioskTrackMetaKey">Service Code:</div>
+          <div class="kioskTrackMetaVal" id="metaService">—</div>
+        </div>
+        <div class="kioskTrackMetaRow">
+          <div class="kioskTrackMetaKey">Name:</div>
+          <div class="kioskTrackMetaVal" id="metaName">—</div>
+        </div>
+        <div class="kioskTrackMetaRow">
+          <div class="kioskTrackMetaKey">Mobile:</div>
+          <div class="kioskTrackMetaVal" id="metaMobile">—</div>
+        </div>
+        <div class="kioskTrackMetaRow">
+          <div class="kioskTrackMetaKey">Filed:</div>
+          <div class="kioskTrackMetaVal" id="metaFiled">—</div>
+        </div>
+      </div>
+
+      <hr class="kioskHr" />
+
+      <div class="kioskTimelineHead">
+        <div class="kioskTimelineHeadTitle">Status History</div>
+        <div class="kioskTimelineHeadHint">Most recent update is on top.</div>
+      </div>
+
+      <ol class="kioskTimeline" id="timeline"></ol>
+
+      <div class="kioskFormActions" style="margin-top:1.25rem;">
+        <button type="button" class="btn ghost" id="btnBackTop">Track another reference</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="kioskFooter">
+    <div class="kioskFooterLinks">
+      <a href="#">Help &amp; Support</a> • <a href="#">Privacy Notice</a>
+    </div>
+    <div class="kioskFooterCopy">© 2026 Municipal Government. All rights reserved.</div>
+  </footer>
+</div>
+
+<script src="../../staff/assets/js/a11y-prefs.js"></script>
+
+<script>
+  // Uses your existing endpoint:
+  // C:\xampp\htdocs\eserbisyo-hub\api\public\requests\track.php
+  // It requires: ref + (last_name OR mobile_no)
+
+  const API_URL = "/eserbisyo-hub/api/public/requests/track.php";
+
+  // Prefill reference from sessionStorage (from step5)
+  try {
+    const lastSlip = JSON.parse(sessionStorage.getItem('lastSlip') || "null");
+    if (lastSlip && lastSlip.ref) document.getElementById('refInput').value = lastSlip.ref;
+  } catch(e) {}
+
+  const statusMsg = document.getElementById('statusMsg');
+  const resultPanel = document.getElementById('resultPanel');
+  const errRef = document.getElementById('errRef');
+  const errVerify = document.getElementById('errVerify');
+  const errMobileFmt = document.getElementById('errMobileFmt');
+  const timelineEl = document.getElementById('timeline');
+
+  function setStatus(message, type) {
+    statusMsg.classList.remove('is-ok','is-warn','is-err','is-loading');
+    if (type) statusMsg.classList.add('is-' + type);
+    statusMsg.textContent = message || '';
+  }
+
+  function show(el, yes) { el.hidden = !yes; }
+
+  function fmtDate(d) {
+    if (!d) return '—';
+    const dt = new Date(d);
+    if (isNaN(dt.getTime())) return '—';
+    return dt.toLocaleString('en-US', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+  }
+
+  function buildTimeline(history) {
+    timelineEl.innerHTML = '';
+
+    if (!history || history.length === 0) {
+      const li = document.createElement('li');
+      li.className = 'kioskTimelineItem is-current';
+      li.innerHTML = `
+        <div class="kioskTimelineDot"></div>
+        <div class="kioskTimelineBody">
+          <div class="kioskTimelineTitle">No status history available</div>
+          <div class="kioskTimelineMeta">Please ask staff for an update.</div>
+        </div>
+      `;
+      timelineEl.appendChild(li);
+      return;
+    }
+
+    // Your API returns history DESC already (latest first)
+    history.forEach((h, idx) => {
+      const li = document.createElement('li');
+      li.className = 'kioskTimelineItem ' + (idx === 0 ? 'is-current' : 'is-done');
+
+      const title = (h.new_status || 'Updated').toString().trim();
+      const when = fmtDate(h.changed_at);
+      const by = h.changed_by ? ` • ${h.changed_by}` : '';
+      const note = h.note ? ` — ${h.note}` : '';
+
+      li.innerHTML = `
+        <div class="kioskTimelineDot"></div>
+        <div class="kioskTimelineBody">
+          <div class="kioskTimelineTitle">${title}</div>
+          <div class="kioskTimelineMeta">${when}${by}${note}</div>
+        </div>
+      `;
+      timelineEl.appendChild(li);
+    });
+  }
+
+  async function fetchTracking(ref, lastName, mobile) {
+    const qs = new URLSearchParams();
+    qs.set('ref', ref);
+    if (lastName) qs.set('last_name', lastName);
+    if (mobile) qs.set('mobile_no', mobile);
+
+    const res = await fetch(`${API_URL}?${qs.toString()}`, { method: 'GET' });
+    const json = await res.json().catch(() => null);
+
+    if (!res.ok || !json) {
+      throw new Error('Unable to track request right now.');
+    }
+    if (json.error) {
+      throw new Error(json.error);
+    }
+    return json;
+  }
+
+  document.getElementById('trackForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const ref = document.getElementById('refInput').value.trim();
+    const lastName = document.getElementById('lastNameInput').value.trim();
+    const mobile = document.getElementById('mobileInput').value.trim();
+
+    show(errRef, false);
+    show(errVerify, false);
+    show(errMobileFmt, false);
+    resultPanel.hidden = true;
+
+    if (!ref) {
+      show(errRef, true);
+      setStatus('Please enter your reference number.', 'err');
+      return;
+    }
+
+    if (!lastName && !mobile) {
+      show(errVerify, true);
+      setStatus('Provide last name or mobile number for verification.', 'err');
+      return;
+    }
+
+    // mobile format check only if user typed something
+    if (mobile && !document.getElementById('mobileInput').checkValidity()) {
+      show(errMobileFmt, true);
+      setStatus('Invalid mobile number format.', 'err');
+      return;
+    }
+
+    setStatus('Loading status…', 'loading');
+
+    try {
+      const data = await fetchTracking(ref, lastName, mobile);
+
+      document.getElementById('metaRef').textContent = data.reference_no || ref;
+      document.getElementById('metaService').textContent = data.service_code || '—';
+      document.getElementById('metaName').textContent = data.name || '—';
+      document.getElementById('metaMobile').textContent = data.mobile_no || '—';
+      document.getElementById('metaFiled').textContent = fmtDate(data.created_at);
+
+      document.getElementById('resultSub').textContent =
+        `Current: ${data.status || '—'} • Payment: ${data.payment_status || '—'}`;
+
+      buildTimeline(data.history);
+
+      resultPanel.hidden = false;
+      setStatus('Status loaded.', 'ok');
+
+      // Optional: store last tracked for convenience
+      sessionStorage.setItem('lastTrackedRef', ref);
+    } catch (err) {
+      setStatus(err.message || 'Unable to track request.', 'err');
+    }
+  });
+
+  document.getElementById('btnHome').addEventListener('click', () => {
+    window.location.href = 'index.html';
+  });
+
+  document.getElementById('btnBackTop').addEventListener('click', () => {
+    resultPanel.hidden = true;
+    setStatus('', '');
+    document.getElementById('refInput').focus();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>eSerbisyo Hub - Step 3 (Confirm & Print)</title>
+  <link rel="stylesheet" href="../assets/css/kiosk.css" />
+
+  <style>
+    @media print {
+      .appHeader, .kioskFooter, .kioskSteps, .kioskIntro, .kioskSlipActions {
+        display: none !important;
+      }
+      body { background: #fff !important; }
+      .kioskMain { padding: 0 !important; }
+      .kioskPanel { box-shadow: none !important; border: 0 !important; }
+      .kioskSlipCard { box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <header class="appHeader">
+    <div class="brand">
+      <img class="brandLockup" src="../assets/img/eserbisyo-lockup-light.png" alt="eSerbisyo Hub" />
+    </div>
+      <div class="kioskHeaderRight"></div>
+    </header>
+
+  <main class="kioskMain kioskMain--center">
+    <section class="kioskSteps">
+      <ol class="kioskStepList">
+        <li class="kioskStep"><span class="kioskStepNumber">&check;</span><span class="kioskStepLabel">Service &amp; Info</span></li>
+        <li class="kioskStep"><span class="kioskStepNumber">&check;</span><span class="kioskStepLabel">Details</span></li>
+        <li class="kioskStep is-active"><span class="kioskStepNumber">3</span><span class="kioskStepLabel">Confirm &amp; Print</span></li>
+      </ol>
+    </section>
+
+    <section class="kioskIntro">
+      <div class="kioskSuccessIcon" aria-hidden="true">
+        <img src="../assets/img/icons/verified.png" alt="" />
+      </div>
+      <p class="kioskStepKicker">Step 3 of 3: Confirm &amp; Print</p>
+      <h1 class="kioskPageTitle">Confirm &amp; Print Slip</h1>
+      <p class="kioskPageSub">Review your summary and print your slip instantly.</p>
+    </section>
+
+    <section class="kioskPanel">
+      <div class="kioskSlipCard" id="slipCard">
+        <div class="kioskSlipHeader">
+          <div class="kioskSlipGov">Municipal Government of San Fernando, Camarines Sur</div>
+          <div class="kioskSlipTitle">Request Summary &amp; Payment Slip</div>
+          <div class="kioskSlipSub">Civil Registry &amp; Document Services</div>
+        </div>
+
+        <div class="kioskSlipRefBox">
+          <div class="kioskSlipRefLabel">Reference Number</div>
+          <div class="kioskSlipRefValue" id="refNo">Generating...</div>
+        </div>
+
+        <div class="kioskSlipTable">
+          <div class="slipRow">
+            <div class="slipLabel">Service:</div>
+            <div class="slipValue" id="svcRequested">-</div>
+          </div>
+          <div class="slipRow">
+            <div class="slipLabel">Full Name:</div>
+            <div class="slipValue" id="fullName">-</div>
+          </div>
+          <div class="slipRow">
+            <div class="slipLabel">Address:</div>
+            <div class="slipValue" id="addressLine">-</div>
+          </div>
+          <div class="slipRow">
+            <div class="slipLabel">Mobile:</div>
+            <div class="slipValue" id="mobileNo">-</div>
+          </div>
+          <div class="slipRow">
+            <div class="slipLabel">Date Filed:</div>
+            <div class="slipValue" id="dateFiled">-</div>
+          </div>
+          <div class="slipRow">
+            <div class="slipLabel">Amount to Pay:</div>
+            <div class="slipValue" id="amountPay">-</div>
+          </div>
+        </div>
+
+        <p class="kioskSlipInstr">Please verify the details above, then print this slip.</p>
+      </div>
+    </section>
+
+    <div class="kioskSlipActions">
+      <button type="button" class="btn ghost" id="btnEdit">&larr; Edit</button>
+      <button type="button" class="btn primary" id="btnPrint">Print Slip</button>
+      <a href="index.html" class="btn ghost">Return Home</a>
+    </div>
+  </main>
+
+  <footer class="kioskFooter">
+    <div class="kioskFooterLinks">
+      <a href="#">Help &amp; Support</a> &bull; <a href="#">Privacy Notice</a>
+    </div>
+    <div class="kioskFooterCopy">&copy; 2026 Municipal Government. All rights reserved.</div>
+  </footer>
+
+  <script src="../../staff/assets/js/a11y-prefs.js"></script>
+  <script>
+    const API_CREATE_URL = '/eserbisyo-hub/api/public/requests/create.php';
+
+    const SERVICE_LABELS = {
+      CEDULA: 'Community Tax Certificate (Cedula)',
+      MAYOR_CLEARANCE: 'Mayor\'s Clearance',
+      CTC_BIRTH: 'Certified True Copy (Civil Registry Record)',
+      DELAYED_REG: 'Delayed Registration',
+      BUSINESS_RENEWAL: 'Business Permit Renewal',
+      OTHER_RENEWAL: 'Other Renewal Requests'
+    };
+
+    const SERVICE_FEES = {
+      CEDULA: 'PHP 50 - PHP 500',
+      MAYOR_CLEARANCE: 'PHP 100',
+      CTC_BIRTH: 'PHP 150 - PHP 200',
+      DELAYED_REG: 'Varies',
+      BUSINESS_RENEWAL: 'Varies',
+      OTHER_RENEWAL: 'Varies'
+    };
+
+    const raw = sessionStorage.getItem('requestForm');
+    if (!raw) {
+      window.location.href = 'request-step2.html';
+    }
+
+    let requestData = {};
+    try { requestData = JSON.parse(raw || '{}'); } catch (e) {}
+
+    if (!requestData.service_code) {
+      requestData.service_code = sessionStorage.getItem('selectedService') || '';
+    }
+    if (!requestData.service_code) {
+      window.location.href = 'request-step1.html';
+    }
+
+    let isCreating = false;
+    let createPromise = null;
+
+    function formatDate(dateString) {
+      if (!dateString) return '-';
+      const d = new Date(dateString);
+      if (Number.isNaN(d.getTime())) return '-';
+      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function buildFullName(data) {
+      return [data.first_name, data.middle_name, data.last_name]
+        .filter(Boolean)
+        .join(' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function renderSummary(data) {
+      const serviceCode = data.service_code || 'CEDULA';
+      const serviceName = SERVICE_LABELS[serviceCode] || serviceCode;
+      const amount = SERVICE_FEES[serviceCode] || 'Varies';
+      const fullName = buildFullName(data);
+
+      document.getElementById('svcRequested').textContent = serviceName;
+      document.getElementById('fullName').textContent = fullName || '-';
+      document.getElementById('addressLine').textContent = data.address_line || '-';
+      document.getElementById('mobileNo').textContent = data.mobile_no || '-';
+      document.getElementById('amountPay').textContent = amount;
+      document.getElementById('dateFiled').textContent = formatDate(data.created_at || new Date().toISOString());
+
+      document.getElementById('refNo').textContent = data.reference_no || 'Generating...';
+    }
+
+    async function createRequestIfNeeded() {
+      if (requestData.reference_no) {
+        return requestData.reference_no;
+      }
+      if (isCreating) {
+        return createPromise;
+      }
+
+      isCreating = true;
+      createPromise = (async () => {
+      try {
+        const res = await fetch(API_CREATE_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestData)
+        });
+
+        const json = await res.json();
+        if (!res.ok || !json || json.error || json.errors) {
+          const msg = json?.error || (json?.errors ? json.errors.join('; ') : 'Submission failed.');
+          throw new Error(msg);
+        }
+
+        requestData.reference_no = json.reference_no;
+        requestData.status = 'Queued';
+        requestData.created_at = json?.request?.created_at || new Date().toISOString();
+
+        sessionStorage.setItem('requestForm', JSON.stringify(requestData));
+        sessionStorage.setItem('requestRef', requestData.reference_no);
+        sessionStorage.setItem('requestLastName', requestData.last_name || '');
+        sessionStorage.setItem('requestMobile', requestData.mobile_no || '');
+        sessionStorage.setItem('selectedService', requestData.service_code || '');
+
+        renderSummary(requestData);
+        return requestData.reference_no;
+      } catch (err) {
+        alert('Unable to generate reference number. Please try again.\n' + err.message);
+        return null;
+      } finally {
+        isCreating = false;
+        createPromise = null;
+      }
+      })();
+
+      return createPromise;
+    }
+
+    document.getElementById('btnEdit').addEventListener('click', () => {
+      window.location.href = 'request-step2.html';
+    });
+
+    document.getElementById('btnPrint').addEventListener('click', async () => {
+      const ref = await createRequestIfNeeded();
+      if (!ref) return;
+      window.print();
+    });
+
+    // Initial render + auto-generate reference so summary is complete on load.
+    renderSummary(requestData);
+    void createRequestIfNeeded();
+  </script>
+</body>
+</html>

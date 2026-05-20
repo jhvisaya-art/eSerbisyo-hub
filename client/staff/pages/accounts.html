@@ -1,0 +1,129 @@
+<!doctype html>
+<!-- FILE: C:\xampp\htdocs\eserbisyo-hub\client\staff\pages\accounts.html -->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>eSerbisyo Hub — Manage Accounts</title>
+  <link rel="stylesheet" href="../assets/css/staff.css" />
+  <style>
+    .pill-admin   { background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
+    .pill-active  { background:#f0fdf4; border-color:#bbf7d0; color:#15803d; }
+    .pill-inactive{ background:#fef2f2; border-color:#fecaca; color:#b91c1c; }
+    .accMsg { font-size:0.82rem; margin-top:0.4rem; min-height:1rem; }
+  </style>
+</head>
+<body>
+
+  <header class="appHeader">
+    <div class="brand">
+      <img class="brandLockup" src="../assets/img/eserbisyo-lockup-light.png"
+           alt="eSerbisyo Hub — Automated Municipal Kiosk System" />
+    </div>
+    <div class="headerRight">
+      <a href="./dashboard.html" class="btn ghost" type="button">← Dashboard</a>
+      <button id="logoutBtn" class="btn danger" type="button">Logout</button>
+    </div>
+  </header>
+
+  <main style="max-width:72rem;margin:0 auto;padding:1.25rem 1rem;">
+
+    <div style="margin-bottom:1.25rem;">
+      <h1 style="margin:0;font-size:1.375rem;font-weight:800;">Account Management</h1>
+      <p style="margin:0.25rem 0 0;color:var(--muted);font-size:0.875rem;">
+        Create, manage, and deactivate staff login accounts.
+      </p>
+    </div>
+
+    <!-- Create account -->
+    <div class="panel" style="margin-bottom:1rem;">
+      <div class="panelHead">
+        <div>
+          <div class="panelTitle">Create New Account</div>
+          <div class="panelSub">New accounts are active immediately. Password minimum 8 characters.</div>
+        </div>
+      </div>
+      <div style="padding:1rem;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:0.75rem;align-items:flex-end;">
+          <div>
+            <div class="label" style="margin-bottom:0.3rem;">Username</div>
+            <input class="input" id="accNewUsername" placeholder="e.g. staff2"
+                   autocomplete="off" style="width:100%;" />
+          </div>
+          <div>
+            <div class="label" style="margin-bottom:0.3rem;">Password</div>
+            <input class="input" id="accNewPassword" type="password"
+                   placeholder="Min. 8 characters"
+                   autocomplete="new-password" style="width:100%;" />
+          </div>
+          <div>
+            <div class="label" style="margin-bottom:0.3rem;">Role</div>
+            <select class="input" id="accNewRole" style="width:100%;">
+              <option value="STAFF">STAFF — Process requests</option>
+              <option value="ADMIN">ADMIN — Full access</option>
+            </select>
+          </div>
+          <button class="btn success" id="btnAccCreate" type="button">+ Create</button>
+        </div>
+        <p id="accCreateMsg" class="msg accMsg"></p>
+      </div>
+    </div>
+
+    <!-- Accounts table -->
+    <div class="panel">
+      <div class="panelHead">
+        <div>
+          <div class="panelTitle" id="accTableTitle">All Accounts</div>
+          <div class="panelSub">Deactivate blocks login without deleting the account.</div>
+        </div>
+        <div class="panelTools">
+          <input class="input" id="accSearch" placeholder="Search username…"
+                 autocomplete="off" />
+          <button class="btn" id="btnAccRefresh" type="button">Refresh</button>
+        </div>
+      </div>
+
+      <div class="tableWrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th class="noWrap">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="accRows"></tbody>
+        </table>
+      </div>
+      <p id="accListMsg" class="msg" style="padding:0 1rem;font-size:0.82rem;"></p>
+    </div>
+
+  </main>
+
+  <!-- Reset Password Modal -->
+  <div class="modalOverlay" id="accResetOverlay" hidden>
+    <div class="modalCard" style="max-width:26rem;" role="dialog" aria-modal="true">
+      <button type="button" class="modalClose" id="accResetClose" aria-label="Close">&times;</button>
+      <div class="modalHead">
+        <div class="modalTitle">Reset Password</div>
+        <div class="modalRef" id="accResetUsername">—</div>
+      </div>
+      <div class="modalBody">
+        <div class="label" style="margin-bottom:0.3rem;">New Password (min. 8 characters)</div>
+        <input class="input" id="accResetPwInput" type="password"
+               placeholder="New password" autocomplete="new-password"
+               style="width:100%;margin-bottom:0.75rem;" />
+        <button class="btn success" id="btnAccConfirmReset" type="button" style="width:100%;">
+          Set New Password
+        </button>
+        <p id="accResetMsg" class="msg accMsg"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/js/a11y-prefs.js"></script>
+  <script type="module" src="../assets/js/accounts.js"></script>
+</body>
+</html>

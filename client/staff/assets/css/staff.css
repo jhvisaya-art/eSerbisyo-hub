@@ -1,0 +1,537 @@
+/* FILE: C:\xampp\htdocs\eserbisyo-hub\client\staff\assets\css\staff.css */
+
+/* =========================================================
+   Global + scaling (Large Text)
+   ========================================================= */
+
+/* Baseline: 1rem = 16px. LargeText scales the whole UI. [web:1271][web:1272] */
+/* Large text is the permanent default for readability — no toggle needed */
+html{ font-size:20px; }
+
+/* Global safety */
+[hidden]{ display:none !important; } /* hidden attribute behavior [web:1110] */
+
+*{ box-sizing:border-box; }
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Focus */
+*:focus-visible{
+  outline:0.1875rem solid var(--primary);
+  outline-offset:0.1875rem;
+}
+
+/* =========================================================
+   Theme variables (kept as-is; radius/shadow converted to rem)
+   ========================================================= */
+:root{
+  --bg:#f6f8fb;
+  --text:#0b1b2b;
+
+  --card:#ffffff;
+  --border:#e6edf6;
+  --border-strong:#cfdced;
+
+  --muted:#667;
+  --primary:#0ea56a;
+  --primary-100:#d9f5e6;
+
+  --navy:#0b1b35;
+  --green:#0a8f5b;
+  --focus: rgba(47, 128, 237, .18);
+
+  --shadow: 0 0.5rem 1.375rem rgba(15, 23, 42, 0.06);
+  --shadow-strong: 0 0.875rem 2.125rem rgba(15, 23, 42, 0.10);
+  --glow: 0 0 0 0.25rem rgba(14,165,106,0.12);
+
+  --r-sm:0.625rem;
+  --r-md:0.75rem;
+  --r-lg:0.875rem;
+  --r-xl:1.125rem;
+}
+
+/* =========================================================
+   Shared controls (rem-based)
+   ========================================================= */
+.input{
+  padding:0.75rem;
+  font-size:1rem;
+  border-radius: var(--r-md);
+  border:0.0625rem solid var(--border-strong);
+  background:#fff;
+}
+
+.btn{
+  padding:0.75rem 0.875rem;
+  font-size:1rem;
+  border-radius: var(--r-md);
+  border:0.0625rem solid var(--border-strong);
+  background:#fff;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.5rem;
+}
+.btn.mini{ padding:0.5rem 0.75rem; font-size:0.875rem; border-radius: var(--r-sm); }
+.btn.ghost{ background:#f4f7fb; }
+.btn.success{ background:var(--primary); border-color:var(--primary); color:#fff; }
+.btn.danger{ background:#e74c3c; border-color:#e74c3c; color:#fff; }
+
+.pill{
+  display:inline-flex;
+  padding:0.375rem 0.625rem;
+  border-radius:999px;
+  border:0.0625rem solid var(--border-strong);
+  background:#f8fafc;
+  font-size:0.75rem;
+}
+.pill-paid{
+  background:#eaf7f0;
+  border-color:#b7e4c7;
+  color:#15803d;
+}
+
+/* Toggle buttons */
+.chip{
+  padding:0.625rem 0.875rem;
+  border-radius:0.625rem;
+  border:0.125rem solid var(--navy);
+  background:var(--navy);
+  color:#fff;
+  cursor:pointer;
+  font-weight:700;
+}
+.chip.alt{ border-color:var(--navy); background:var(--navy); }
+.chip:focus{ outline:none; box-shadow:0 0 0 0.1875rem var(--focus); }
+
+/* =========================================================
+   Header
+   ========================================================= */
+.appHeader{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:1rem 1.25rem;
+  background: var(--card);
+  border-bottom:0.125rem solid var(--primary);
+}
+
+.brand{ display:flex; align-items:center; gap:0.75rem; }
+.brandLogo{
+  width:2.5rem;
+  height:2.5rem;
+  border-radius:999px;
+  background: var(--primary);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+}
+.brandLockup{
+  height:4rem;
+  width:auto;
+  display:block;
+  object-fit:contain;
+}
+.brandMark{
+  width:2.5rem;
+  height:2.5rem;
+  object-fit:contain;
+  display:block;
+}
+.brandTitle{ font-weight:800; line-height:1.1; }
+.brandSub{ font-size:0.75rem; color:#556; margin-top:0.125rem; }
+
+.headerRight{
+  display:flex;
+  align-items:center;
+  gap:0.625rem;
+}
+
+/* =========================================================
+   Dashboard layout
+   ========================================================= */
+.appShell{
+  display:grid;
+  grid-template-columns: 16.25rem 1fr; /* 260px */
+  gap:1rem;
+  padding:1rem;
+}
+
+.nav{
+  background: var(--card);
+  border:0.0625rem solid var(--border-strong);
+  border-radius: var(--r-lg);
+  padding:0.75rem;
+  box-shadow: var(--shadow);
+}
+.navTitle{ font-size:0.8125rem; color: var(--muted); margin-bottom:0.5rem; }
+
+.navItem{
+  width:100%;
+  text-align:left;
+  padding:0.75rem;
+  border-radius: var(--r-md);
+  border:0.0625rem solid transparent;
+  background:#fff;
+  cursor:pointer;
+  position:relative;
+  font-weight:600;
+  transition: background .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.navItem:hover{
+  background:#f4fbf7;
+  border-color: var(--border);
+}
+.navItem.active{
+  background: var(--primary-100);
+  border-color: #8fe0b7;
+  box-shadow: var(--glow);
+}
+.navItem.active::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0.625rem;
+  bottom:0.625rem;
+  width:0.4375rem; /* 7px */
+  border-radius:0.375rem;
+  background: var(--primary);
+}
+
+.main{ min-width:0; }
+
+.panel{
+  background: var(--card);
+  border:0.0625rem solid var(--border-strong);
+  border-radius: var(--r-lg);
+  overflow:hidden;
+  box-shadow: var(--shadow);
+}
+.panelHead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0.875rem 1rem;
+  border-bottom:0.0625rem solid var(--border);
+  gap:0.75rem;
+}
+.panelTitle{ font-weight:800; }
+.panelSub{ font-size:0.75rem; color: var(--muted); margin-top:0.125rem; }
+.panelTools{ display:flex; gap:0.625rem; align-items:center; flex-wrap:wrap; }
+
+/* =========================================================
+   Filter bar (Strategy 3 — date range + archive toggle)
+   ========================================================= */
+.filterBar{
+  display:flex;
+  align-items:center;
+  gap:0.5rem;
+  flex-wrap:wrap;
+  padding:0.625rem 1rem;
+  border-bottom:0.0625rem solid var(--border);
+  background:#fafbfc;
+}
+.filterLabel{ font-size:0.8125rem; font-weight:600; color:var(--muted); white-space:nowrap; }
+.filterInput{ width:auto; min-width:0; font-size:0.875rem; padding:0.4rem 0.625rem; max-width:9.5rem; }
+.filterSep{ color:var(--muted); font-size:0.875rem; }
+.filterArchiveToggle{
+  display:flex; align-items:center; gap:0.375rem;
+  font-size:0.8125rem; color:var(--muted);
+  cursor:pointer; margin-left:0.5rem; user-select:none;
+}
+.filterArchiveToggle input{ cursor:pointer; accent-color:var(--primary); }
+
+/* =========================================================
+   Pagination bar (Strategy 1)
+   ========================================================= */
+.paginationBar{
+  display:flex; align-items:center; justify-content:center;
+  gap:1rem; padding:0.625rem 1rem;
+  border-top:0.0625rem solid var(--border);
+}
+.pageInfo{ font-size:0.875rem; font-weight:600; color:var(--muted); min-width:5rem; text-align:center; }
+.paginationBar .btn{ font-size:0.875rem; padding:0.4rem 0.875rem; }
+.paginationBar .btn:disabled{ opacity:0.4; cursor:not-allowed; }
+
+/* =========================================================
+   Export controls
+   ========================================================= */
+#exportControls{
+  display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;
+  padding-left:0.625rem;
+  border-left:0.0625rem solid var(--border-strong);
+  margin-left:0.125rem;
+}
+#btnExport{ background:var(--primary); border-color:var(--primary); color:#fff; font-weight:700; white-space:nowrap; }
+#btnExport:hover   { background:#0b9460; border-color:#0b9460; }
+#btnExport:disabled{ opacity:0.65; cursor:not-allowed; }
+
+/* =========================================================
+   Archive block in modal (Strategy 2)
+   ========================================================= */
+#archiveBlock{
+  margin-top:0.75rem; padding-top:0.75rem;
+  border-top:0.0625rem solid var(--border);
+}
+
+/* Extra badge + pill colours needed for archive/admin UI */
+.pill-admin   { background:#eff6ff; border-color:#bfdbfe; color:#1d4ed8; }
+.pill-active  { background:#f0fdf4; border-color:#bbf7d0; color:#15803d; }
+.pill-inactive{ background:#fef2f2; border-color:#fecaca; color:#b91c1c; }
+
+/* KPIs */
+.statsRow{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(9.375rem, 1fr)); /* 150px */
+  gap:0.75rem;
+  margin-bottom:0.75rem;
+}
+.statCard{
+  border:0.0625rem solid var(--border-strong);
+  border-radius: var(--r-lg);
+  padding:0.875rem;
+  background:#fff;
+  box-shadow: var(--shadow);
+}
+.statNum{ font-size:1.375rem; font-weight:800; } /* 22px */
+.statLbl{ font-size:0.75rem; color:#556; margin-top:0.375rem; }
+.statCard.blue{ background:#eef6ff; }
+.statCard.yellow{ background:#fff6e6; }
+.statCard.green{ background:#eaf7f0; }
+.statCard.purple{ background:#f3edff; }
+
+/* Table */
+.tableWrap{ overflow:auto; }
+.tbl{ width:100%; border-collapse:collapse; min-width:57.5rem; } /* 920px */
+.tbl th, .tbl td{
+  padding:0.75rem 0.875rem;
+  border-bottom:0.0625rem solid #eef2f7;
+  text-align:left;
+  font-size:0.9375rem; /* 15px */
+}
+.tbl th{ background:#f7f9fc; }
+.noWrap{ white-space:nowrap; }
+
+.msg{ padding:0.625rem 1rem; color:#c0392b; }
+
+/* =========================================================
+   Modal
+   ========================================================= */
+.modalOverlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.45);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:1.125rem;
+  z-index:999;
+}
+
+.modalCard{
+  width:min(57.5rem, 96vw); /* 920px */
+  max-height:90vh;
+  overflow:auto;
+  background:#fff;
+  border-radius: var(--r-xl);
+  border:0.0625rem solid var(--border);
+  box-shadow: var(--shadow-strong);
+  position:relative;
+}
+.modalClose{
+  position:absolute;
+  top:0.625rem;
+  right:0.75rem;
+  width:2.5rem;
+  height:2.5rem;
+  border-radius: var(--r-sm);
+  border:0.0625rem solid var(--border);
+  background:#fff;
+  cursor:pointer;
+  font-size:1.375rem; /* 22px */
+}
+.modalHead{ padding:1.125rem 1.125rem 0 1.125rem; }
+.modalTitle{ font-weight:800; font-size:1.125rem; } /* 18px */
+.modalRef{ color: var(--muted); margin-top:0.25rem; }
+.modalBody{ padding:1.125rem; }
+
+.infoBox{
+  border:0.0625rem solid #eef2f7;
+  background:#fbfcfe;
+  border-radius: var(--r-lg);
+  padding:0.875rem;
+}
+.infoTitle{ font-weight:700; margin-bottom:0.625rem; }
+.infoGrid{ display:grid; grid-template-columns: 1fr 1fr; gap:0.75rem; }
+.label{ font-size:0.75rem; color: var(--muted); }
+.value{ font-size:0.875rem; }
+
+.section{ margin-top:0.875rem; }
+.sectionTitle{ font-weight:700; margin-bottom:0.625rem; }
+
+.segmented{ display:flex; gap:0.625rem; }
+.segBtn{
+  flex:1;
+  padding:0.75rem;
+  border-radius: var(--r-md);
+  border:0.0625rem solid var(--border-strong);
+  background:#eef6ff;
+  cursor:pointer;
+}
+.payRow{ display:flex; align-items:center; gap:0.625rem; flex-wrap:wrap; }
+
+.historyBox{
+  border:0.0625rem solid #eef2f7;
+  border-radius: var(--r-md);
+  background:#fbfcfe;
+  padding:0.75rem;
+  min-height:4.375rem; /* 70px */
+  white-space:pre-wrap;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size:0.75rem;
+  color:#334;
+}
+.noteRow{ display:flex; gap:0.625rem; margin-top:0.625rem; }
+.noteRow .input{ flex:1; min-width:0; }
+
+.modalActions{
+  display:flex;
+  gap:0.625rem;
+  justify-content:flex-end;
+  margin-top:1rem;
+}
+
+/* =========================================================
+   Login page
+   ========================================================= */
+.shell{
+  max-width: 26.25rem; /* 420px */
+  margin: 2.25rem auto;
+  padding: 0 1rem;
+}
+.shell .panel{
+  border-radius: 0.875rem;
+  padding: 1.125rem;
+}
+
+.panel__head{ text-align:center; margin-bottom:0.625rem; }
+.panel__logo{
+  width:7rem;
+  height:auto;
+  display:block;
+  margin:0.375rem auto 0.625rem;
+}
+.panel__title{ margin:0; font-size:1.375rem; } /* 22px */
+.panel__subtitle{ margin:0.375rem 0 0; color:#556070; font-size:0.8125rem; }
+
+.field{ margin-top:0.75rem; }
+
+.alert{
+  margin:0.875rem 0;
+  border:0.0625rem solid #f2d98c;
+  background:#fff8db;
+  border-radius:0.625rem;
+  padding:0.75rem;
+}
+.alert__title{ font-weight:800; margin-bottom:0.25rem; }
+.alert__text{ color:#5a4a1a; font-size:0.8125rem; }
+
+.demo{
+  margin-top:0.75rem;
+  border:0.0625rem solid #d9e8ff;
+  background:#eef5ff;
+  border-radius:0.625rem;
+  padding:0.75rem;
+}
+.demo__title{ font-weight:800; margin-bottom:0.375rem; }
+.demo__row{ font-size:0.8125rem; color:#23324d; }
+
+.btnPrimary{
+  width:100%;
+  margin-top:0.875rem;
+  padding:0.75rem 0.875rem;
+  border:0;
+  border-radius:0.625rem;
+  background: var(--green);
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+}
+.btnPrimary:hover{ filter: brightness(0.96); }
+.btnPrimary:disabled{ opacity:.7; cursor:not-allowed; }
+
+.backHome{
+  display:block;
+  text-align:center;
+  margin-top:1.125rem;
+  color:#223;
+  font-size:0.8125rem;
+}
+
+/* =========================================================
+   Responsive
+   ========================================================= */
+@media (max-width: 56.25rem){ /* 900px */
+  .appShell{ grid-template-columns: 1fr; }
+  .panelTools{ flex-direction: column; align-items: stretch; }
+  #exportControls{ border-left:none; padding-left:0; margin-left:0; border-top:0.0625rem solid var(--border-strong); padding-top:0.5rem; margin-top:0.25rem; }
+  .statsRow{ grid-template-columns: repeat(2, minmax(8.75rem, 1fr)); } /* 140px */
+  .infoGrid{ grid-template-columns: 1fr; }
+}
+@media (max-width: 26.25rem){ /* 420px */
+  .shell{ margin: 1.125rem auto; }
+}
+
+/* =========================================================
+   High Contrast (outline only, keep colors)
+   ========================================================= */
+html.contrast{
+  --hc: #111;
+  --hc-w: 2px;
+}
+
+html.contrast body{
+  background: var(--bg);
+  color: var(--text);
+}
+
+html.contrast .appHeader,
+html.contrast .panel,
+html.contrast .nav,
+html.contrast .statCard,
+html.contrast .modalCard{
+  border-color: var(--hc) !important;
+  box-shadow: none !important;
+}
+
+html.contrast .btn,
+html.contrast .input{
+  border-color: var(--hc) !important;
+  box-shadow: none !important;
+}
+
+html.contrast .chip{
+  outline: var(--hc-w) solid var(--hc);
+  outline-offset: 0;
+  box-shadow: none !important;
+}
+
+html.contrast .tbl th,
+html.contrast .tbl td{
+  border-bottom-color: var(--hc) !important;
+}
+
+html.contrast .navItem.active{
+  border-color: var(--hc) !important;
+  box-shadow: none !important;
+}
+html.contrast .navItem.active::before{
+  background: var(--hc) !important;
+}

@@ -1,0 +1,37 @@
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+
+# Composer
+/vendor/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs & temp
+*.log
+/logs/
+/tmp/
+*.bak
+*~
+
+# Debug leftovers
+session_test.php
+login_trace.php
+login_check.php
+full_test.php
+test_pg.php
+me_debug.log
+*_original.php
+
+# PHP cache
+.php_cs.cache

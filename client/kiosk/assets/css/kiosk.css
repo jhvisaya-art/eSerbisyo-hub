@@ -1,0 +1,1707 @@
+/* FILE: C:\xampp\htdocs\eserbisyo-hub\client\kiosk\assets\css\kiosk.css */
+
+/* =========================================================
+   Global base + tokens (merged "shared.css")
+   ========================================================= */
+
+/* Large text is the permanent default for kiosk readability — no toggle needed */
+html{ font-size:20px; }
+
+[hidden]{ display:none !important; }
+
+:root{
+  --bg:#f6f8fb;
+  --text:#0b1b2b;
+
+  --card:#ffffff;
+  --border:#e6edf6;
+  --border-strong:#cfdced;
+
+  --muted:#667;
+  --primary:#0ea56a;
+  --primary-100:#d9f5e6;
+
+  --navy:#0b1b35;
+  --green:#0a8f5b;
+  --focus: rgba(47, 128, 237, .18);
+
+  --shadow: 0 0.5rem 1.375rem rgba(15, 23, 42, 0.06);
+  --shadow-strong: 0 0.875rem 2.125rem rgba(15, 23, 42, 0.10);
+  --glow: 0 0 0 0.25rem rgba(14,165,106,0.12);
+
+  --r-sm:0.625rem;
+  --r-md:0.75rem;
+  --r-lg:0.875rem;
+  --r-xl:1.125rem;
+}
+
+*{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Focus */
+*:focus-visible{
+  outline: 0.1875rem solid var(--primary);
+  outline-offset: 0.1875rem;
+}
+
+/* =========================================================
+   Shared controls (inputs/buttons/toggles)
+   ========================================================= */
+
+.input{
+  padding:0.75rem;
+  font-size:1rem;
+  border-radius: var(--r-md);
+  border:0.0625rem solid var(--border-strong);
+  background:#fff;
+}
+
+.btn{
+  padding:0.75rem 0.875rem;
+  font-size:1rem;
+  border-radius: var(--r-md);
+  border:0.0625rem solid var(--border-strong);
+  background:#fff;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:0.5rem;
+}
+.btn.mini{ padding:0.5rem 0.75rem; font-size:0.875rem; border-radius: var(--r-sm); }
+.btn.ghost{ background:#f4f7fb; }
+.btn.success{ background:var(--primary); border-color:var(--primary); color:#fff; }
+.btn.danger{ background:#e74c3c; border-color:#e74c3c; color:#fff; }
+.btn.primary{ background:var(--primary); border-color:var(--primary); color:#fff; }
+
+.pill{
+  display:inline-flex;
+  padding:0.375rem 0.625rem;
+  border-radius:999px;
+  border:0.0625rem solid var(--border-strong);
+  background:#f8fafc;
+  font-size:0.75rem;
+}
+
+/* A11y toggle buttons */
+.chip{
+  padding:0.625rem 0.875rem;
+  border-radius:0.625rem;
+  border:0.125rem solid var(--navy);
+  background:var(--navy);
+  color:#fff;
+  cursor:pointer;
+  font-weight:700;
+}
+.chip.alt{ border-color:var(--navy); background:var(--navy); }
+.chip:focus{ outline:none; box-shadow:0 0 0 0.1875rem var(--focus); }
+
+/* =========================================================
+   Shared header
+   ========================================================= */
+
+.appHeader{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:1rem 1.25rem;
+  background: var(--card);
+  border-bottom:0.125rem solid var(--primary);
+}
+
+.brand{ display:flex; align-items:center; gap:0.75rem; }
+.brandLogo{
+  width:2.5rem;
+  height:2.5rem;
+  border-radius:999px;
+  background: var(--primary);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+}
+.brandLockup{
+  height:4rem;
+  width:auto;
+  object-fit:contain;
+  display:block;
+}
+.brandMark{
+  width:2.5rem;
+  height:2.5rem;
+  object-fit:contain;
+  display:block;
+}
+.brandTitle{ font-weight:800; line-height:1.1; }
+.brandSub{ font-size:0.75rem; color:#556; margin-top:0.125rem; }
+
+.headerRight{
+  display:flex;
+  align-items:center;
+  gap:0.625rem;
+}
+
+.kioskHeaderRight{
+  display:flex;
+  align-items:center;
+  gap:0.625rem;
+}
+
+.kioskStaffLink,
+.kioskLink{
+  color:#334;
+  font-size: 0.8125rem;
+  text-decoration:none;
+}
+.kioskStaffLink:hover,
+.kioskLink:hover{ text-decoration:underline; }
+
+/* =========================================================
+   Page shells (reusable)
+   ========================================================= */
+
+.kioskPage{
+  min-height: 100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* Default main (home and general) */
+.kioskMain{
+  flex:1;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding: 1.75rem 1rem 1.125rem;
+}
+
+/* Constrained centered pages (request steps, track, etc.) */
+.kioskMain--center{
+  max-width: 70rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 3rem;
+}
+
+/* =========================================================
+   Kiosk Home (index.html)
+   ========================================================= */
+
+.kioskHero{
+  text-align:center;
+  margin: 1.125rem 0 1.125rem;
+}
+.kioskHero h1{
+  margin:0;
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: #1f2937;
+}
+.kioskHero p{
+  margin: 0.5rem 0 0;
+  color: #556070;
+  font-size: 0.875rem;
+}
+
+.kioskGrid{
+  width: min(61.25rem, 100%); /* 980px */
+  display:grid;
+  grid-template-columns: repeat(3, minmax(13.75rem, 1fr));
+  gap: 1.375rem;
+  margin-top: 1.375rem;
+}
+
+.kioskCard{
+  border-radius: 0.875rem;
+  border: 0.0625rem solid rgba(0,0,0,0.08);
+  box-shadow: var(--shadow);
+  padding: 1.625rem 1.375rem;
+  min-height: 15rem;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  color: #fff;
+  text-align:center;
+  user-select:none;
+}
+.kioskCard:hover{ filter: brightness(0.98); }
+.kioskCard:active{ transform: translateY(0.0625rem); }
+
+.kioskIcon{
+  width: 4.625rem;
+  height: 4.625rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.92);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom: 1rem;
+  font-size: 1.875rem;
+  color: #111;
+}
+
+.kioskIcon img,
+.kioskServiceIcon img,
+.kioskDataPrivacyIcon img,
+.kioskSuccessIcon img,
+.mapOfficeIcon img,
+.pin img{
+  display:block;
+  object-fit:contain;
+}
+
+.kioskIcon img{
+  width: 76%;
+  height: 76%;
+}
+
+.kioskCardTitle{
+  font-weight: 900;
+  font-size: 1rem;
+  line-height: 1.25;
+  margin: 0;
+}
+.kioskCardText{
+  margin: 0.625rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  opacity: 0.95;
+  max-width: 16.25rem;
+}
+
+/* Color variants */
+.kioskCard.green{ background:#0ea56a; }
+.kioskCard.blue{ background:#1f66ff; }
+.kioskCard.orange{ background:#d97706; }
+
+/* Note box */
+.kioskNote{
+  width: min(53.75rem, 100%);
+  margin: 1.625rem auto 0;
+  background: #eef5ff;
+  border: 0.0625rem solid #d9e8ff;
+  border-radius: 0.75rem;
+  padding: 1rem 1.125rem;
+  color:#243041;
+  font-size: 0.8125rem;
+  text-align:center;
+}
+.kioskNote strong{ font-weight: 900; }
+
+/* Home responsive */
+@media (max-width: 56.25rem){
+  .kioskGrid{ grid-template-columns: 1fr; }
+  .kioskCard{ min-height: 12.5rem; }
+}
+
+/* =========================================================
+   Request / steps common UI
+   ========================================================= */
+
+.kioskIntro{
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.kioskPageTitle{
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.kioskPageSub{
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* Optional small kicker line like Figma */
+.kioskStepKicker{
+  margin: 0 0 0.25rem;
+  font-size: 0.85rem;
+  color: var(--green);
+}
+
+/* Stepper */
+.kioskSteps{
+  margin: 1rem auto 1.5rem;
+  max-width: 40rem;
+}
+
+.kioskStepList{
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.kioskStep{
+  flex: 1;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.kioskStepNumber{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  border: 2px solid var(--border);
+  background: #fff;
+  box-shadow: var(--shadow);
+  margin-bottom: 0.3rem;
+}
+
+.kioskStep.is-active .kioskStepNumber{
+  border-color: var(--primary);
+  background: var(--primary-100);
+  color: var(--primary);
+}
+
+.kioskStepLabel{ display:block; }
+
+/* Two-column layout (older version; keep for other steps if needed) */
+.kioskLayout{
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.6fr);
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.kioskColumn-left,
+.kioskColumn-right{
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+}
+
+@media (max-width: 56rem){
+  .kioskLayout{ grid-template-columns: 1fr; }
+}
+
+/* Service cards (general) */
+.kioskServiceGrid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+.kioskServiceCard{
+  border-radius: var(--r-lg);
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+  text-align: left;
+  display: flex;
+  gap: 0.9rem;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  min-height: 9.75rem; /* uniform feel */
+}
+
+.kioskServiceCard:hover,
+.kioskServiceCard:focus-visible{
+  box-shadow: var(--shadow-strong);
+  border-color: var(--primary);
+  transform: translateY(-0.05rem);
+}
+
+.kioskServiceCard.is-selected{
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-100);
+}
+
+.kioskServiceIcon{
+  flex: 0 0 auto;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--r-md);
+  background: var(--primary-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 1.5rem;
+}
+
+.kioskServiceIcon img{
+  width: 78%;
+  height: 78%;
+}
+
+.kioskServiceBody{ flex: 1 1 auto; }
+
+.kioskServiceTitle{
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+  color: var(--text);
+}
+
+.kioskServiceDesc{
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+
+.kioskServiceFee{
+  font-size: 0.8rem;
+  color: var(--green);
+}
+
+.kioskServiceGrid--six{
+  width: min(61.25rem, 100%);
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  align-content: start;
+}
+
+@media (max-width: 56rem){
+  .kioskServiceGrid--six{
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 36rem){
+  .kioskServiceGrid--six{
+    grid-template-columns: 1fr;
+  }
+}
+
+.kioskBottomActions{
+  width: 100%;
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* Panels (steps 2-5, forms, info cards) */
+.kioskPanel{
+  background: var(--card);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.kioskPanelHead{ margin-bottom: 1rem; }
+
+.kioskPanelTitle{
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.kioskPanelSub{
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Form fields (steps 3+) */
+.kioskForm{
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.kioskField{
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.kioskFieldRow{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+@media (max-width: 48rem){
+  .kioskFieldRow{ grid-template-columns: 1fr; }
+}
+
+.kioskField label{
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.kioskFieldHint{
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* =========================================================
+   Step 3 components (DB submission + success overlay)
+   ========================================================= */
+
+/* Form sections */
+.kioskFormSection{
+  margin-bottom: 1.5rem;
+}
+
+.kioskFormSectionTitle{
+  font-weight: 900;
+  color: var(--navy);
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+}
+
+/* Success overlay (Step 3 submission) */
+.kioskOverlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 1rem;
+}
+
+body.no-scroll{
+  overflow: hidden;
+}
+
+.kioskSuccessPanel{
+  max-width: 36rem;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  text-align: center;
+}
+
+.kioskSuccessIcon{
+  font-size: 3rem;
+  width: 4rem;
+  height: 4rem;
+  background: var(--primary-100);
+  color: var(--primary);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+}
+
+.kioskSuccessIcon img{
+  width: 74%;
+  height: 74%;
+}
+
+.kioskSuccessTitle{
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--navy);
+  margin: 0 0 0.5rem;
+}
+
+.kioskSuccessRef{
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 0.25rem 0 1rem;
+}
+
+.kioskSuccessMsg{
+  color: var(--text);
+  margin: 0 0 1rem;
+}
+
+.kioskSuccessNext{
+  text-align: left;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--r-lg);
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.kioskSuccessRefBox{
+  background: var(--white);
+  border: 2px solid var(--primary);
+  border-radius: var(--r-md);
+  padding: 1rem;
+  font-weight: 900;
+  font-size: 1.1rem;
+  color: var(--primary);
+  margin: 0.75rem 0;
+  letter-spacing: 0.05em;
+}
+
+/* Data Privacy panel */
+.kioskDataPrivacy{
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  border: 1px solid rgba(59,130,246,0.2);
+  border-radius: var(--r-lg);
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+}
+
+.kioskDataPrivacyHeader{
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.kioskDataPrivacyIcon{
+  font-size: 1.25rem;
+  width: 2rem;
+  height: 2rem;
+  background: rgba(59,130,246,0.15);
+  color: #2563eb;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.kioskDataPrivacyIcon img{
+  width: 72%;
+  height: 72%;
+}
+
+.kioskDataPrivacyTitle{
+  font-weight: 800;
+  color: var(--navy);
+  font-size: 0.95rem;
+}
+
+.kioskDataPrivacy p{
+  margin: 0;
+  color: var(--text);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+/* Consent checkbox (blended) */
+.kioskConsent--big{
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: var(--r-md);
+  min-height: 3.25rem;
+  background: rgba(255,255,255,0.65);
+  border: 1px solid rgba(0,0,0,0.06);
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.kioskConsent--big label{
+  flex: 1;
+  cursor: pointer;
+  margin: 0;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+.kioskConsent--big input[type="checkbox"]{
+  width: 1.6rem;
+  height: 1.6rem;
+  margin: 0;
+  flex: 0 0 auto;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+/* Form actions */
+.kioskFormActions{
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.kioskFormActions .btn{
+  flex: 1;
+  max-width: 18rem;
+}
+
+/* Responsive */
+@media (max-width: 40rem){
+  .kioskSuccessPanel{ padding: 1rem; }
+  .kioskFormActions{ flex-direction: column; }
+  .kioskDataPrivacyHeader{ flex-direction: column; text-align: center; }
+}
+
+/* High contrast */
+html.contrast .kioskSuccessNext,
+html.contrast .kioskDataPrivacy,
+html.contrast .kioskConsent--big,
+html.contrast .kioskSuccessRefBox{
+  background: #fff !important;
+  border-color: #111 !important;
+}
+
+html.contrast .kioskSuccessIcon{
+  background: #111 !important;
+  color: #fff !important;
+}
+
+/* =========================================================
+   Accessible large checkbox (Consent) - aligned + blended
+   ========================================================= */
+
+.kioskConsent--big{
+  /* layout */
+  display: flex;
+  align-items: center;      /* vertical align checkbox + first line of text */
+  gap: 0.75rem;
+
+  /* spacing / hit target */
+  padding: 0.85rem 1rem;
+  border-radius: var(--r-md);
+  min-height: 3.25rem;      /* ~52px touch-friendly */
+
+  /* blended look (matches the Data Privacy panel bg better) */
+  background: rgba(255,255,255,0.65);
+  border: 1px solid rgba(0,0,0,0.06);
+
+  cursor: pointer;
+}
+
+/* Make label fill remaining space and keep clean baseline */
+.kioskConsent--big label{
+  flex: 1;
+  cursor: pointer;
+  margin: 0;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+/* Bigger checkbox + remove default offset so it centers properly */
+.kioskConsent--big input[type="checkbox"]{
+  width: 1.6rem;
+  height: 1.6rem;
+  margin: 0;                 /* IMPORTANT: removes the “low checkbox” look */
+  flex: 0 0 auto;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+/* If the text becomes 2 lines, this keeps checkbox aligned with top nicely */
+@media (max-width: 36rem){
+  .kioskConsent--big{
+    align-items: flex-start;
+  }
+  .kioskConsent--big input[type="checkbox"]{
+    margin-top: 0.15rem;
+  }
+}
+
+/* Keyboard focus */
+.kioskConsent--big input[type="checkbox"]:focus-visible{
+  outline: 0.1875rem solid var(--primary);
+  outline-offset: 0.1875rem;
+}
+
+/* High contrast: stronger border + no translucent bg */
+html.contrast .kioskConsent--big{
+  background: #fff;
+  border-color: #111;
+}
+
+.kioskFormActions{
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.kioskBackBtn{
+  align-self: flex-start;
+  margin-top: 0.5rem;
+}
+
+/* Slip formatting */
+.kioskSlipBody{
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.slipRow{
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.9rem;
+}
+
+.slipLabel{ color: var(--muted); }
+.slipValue{ text-align: right; }
+
+.kioskSlipInstr{
+  font-size: 0.85rem;
+  color: var(--text);
+  margin-top: 0.5rem;
+}
+
+.kioskSlipActions{
+  margin-top: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.kioskMsg{
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+/* Optional preview box (older flow; safe to keep) */
+.kioskServicePreview{
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--primary-100);
+  border-radius: var(--r-lg);
+  margin-bottom: 1rem;
+}
+
+.kioskServicePreviewIcon{
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.kioskServicePreviewTitle{
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+/* =========================================================
+   Step 2 (Info) page components
+   ========================================================= */
+
+.kioskHr{
+  border:0;
+  border-top:1px solid var(--border);
+  margin: 1.25rem 0;
+}
+
+.kioskSectionTitle{
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+  color: var(--text);
+}
+
+/* 3 summary blocks (Fee / Processing / Requirements) */
+.kioskInfoGrid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+@media (max-width: 56rem){
+  .kioskInfoGrid{ grid-template-columns: 1fr; }
+}
+
+.kioskInfoBox{
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+  text-align:center;
+}
+
+.kioskInfoIcon{
+  font-size: 1.8rem;
+  margin-bottom: 0.25rem;
+}
+
+.kioskInfoLabel{
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.kioskInfoValue{
+  font-weight: 800;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+/* Color variants (match Figma cards) */
+.kioskInfoBox--blue{
+  background:#eef5ff;
+  border-color:#d9e8ff;
+}
+.kioskInfoBox--green{
+  background:#eafaf2;
+  border-color:#cfeedd;
+}
+.kioskInfoBox--yellow{
+  background:#fff8e7;
+  border-color:#f3e3b8;
+}
+
+/* Numbered list style (requirements + steps) */
+.kioskNumberList{
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  gap: 0.6rem;
+  counter-reset: item;
+}
+
+.kioskNumberList li{
+  display:flex;
+  align-items:flex-start;
+  gap:0.75rem;
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.4;
+  counter-increment: item;
+}
+
+.kioskNumberList li::before{
+  content: counter(item);
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex: 0 0 auto;
+  background: var(--primary);
+  color:#fff;
+  font-weight: 800;
+  font-size: 0.8rem;
+  margin-top: 0.05rem;
+}
+
+/* Blue numbers for Process Steps */
+.kioskNumberList--blue li::before{
+  background: #1f66ff;
+}
+
+/* High Contrast behavior: outlines/borders only, keep colors elsewhere */
+html.contrast .kioskInfoBox{
+  box-shadow:none;
+  border-color: var(--border-strong);
+  outline: 2px solid #111;
+  outline-offset: 0;
+}
+
+/* =========================================================
+   Step 4 (Review) components
+   ========================================================= */
+
+.kioskReviewBlock{
+  display:flex;
+  flex-direction:column;
+  gap:0.5rem;
+}
+
+.kioskReviewLabel{
+  font-size:0.8rem;
+  color: var(--muted);
+}
+
+.kioskReviewService{
+  background: #eafaf2;
+  border: 1px solid #cfeedd;
+  border-radius: var(--r-md);
+  padding: 0.9rem 1rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.kioskReviewSection{
+  display:flex;
+  flex-direction:column;
+  gap:0.6rem;
+}
+
+.kioskReviewSectionTitle{
+  font-weight: 700;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.kioskReviewRow{
+  display:grid;
+  grid-template-columns: 12rem 1fr;
+  gap: 1rem;
+  font-size: 0.85rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.kioskReviewRow:last-child{ border-bottom: 0; }
+
+.kioskReviewKey{
+  color: var(--muted);
+}
+
+.kioskReviewVal{
+  color: var(--text);
+  font-weight: 600;
+  text-align:left;
+  word-break: break-word; /* prevents long values from overflowing */
+}
+
+/* Important box */
+.kioskImportantBox{
+  margin-top: 1.25rem;
+  background: #fff8e7;
+  border: 1px solid #f3e3b8;
+  border-radius: var(--r-lg);
+  padding: 1rem 1.1rem;
+}
+
+.kioskImportantTitle{
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: #6b4e00;
+  font-size: 0.85rem;
+}
+
+.kioskImportantList{
+  margin: 0;
+  padding-left: 1.1rem;
+  color: #5a4a20;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+/* Buttons under the card */
+.kioskReviewActions{
+  width: 100%;
+  display:flex;
+  justify-content:center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+/* Responsive: stack key/value and stack buttons */
+@media (max-width: 40rem){
+  .kioskReviewRow{ grid-template-columns: 1fr; }
+  .kioskReviewActions{ flex-direction:column; }
+  .kioskReviewActions .btn{ width: 100%; }
+}
+
+/* High contrast */
+html.contrast .kioskReviewService,
+html.contrast .kioskImportantBox{
+  background:#fff;
+  border-color:#111;
+  box-shadow:none;
+  outline: 2px solid #111;
+  outline-offset: 0;
+}
+
+    .kioskSuccessIcon{
+      font-size: 2.25rem;
+      width: 3rem;
+      height: 3rem;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 999px;
+      background: var(--primary-100);
+      color: var(--primary);
+      margin: 0 auto 0.5rem;
+    }
+
+    .kioskSlipCard{
+      border: 2px solid rgba(14,165,106,0.35);
+      border-radius: var(--r-lg);
+      padding: 1.25rem 1.25rem 1rem;
+      background: #fff;
+      max-width: 36rem;
+      margin: 0 auto;
+      box-shadow: var(--shadow);
+    }
+
+    .kioskSlipHeader{
+      text-align:center;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      margin-bottom: 1rem;
+    }
+    .kioskSlipGov{ font-size:0.72rem; color: var(--muted); }
+    .kioskSlipTitle{ font-size:1rem; font-weight:900; margin-top:0.25rem; }
+    .kioskSlipSub{ font-size:0.75rem; color: var(--muted); margin-top:0.15rem; }
+
+    .kioskSlipRefBox{
+      text-align:center;
+      border: 1px solid rgba(14,165,106,0.45);
+      background: #eafaf2;
+      border-radius: var(--r-md);
+      padding: 0.85rem 0.9rem;
+      margin: 0.75rem 0 1rem;
+    }
+    .kioskSlipRefLabel{ font-size:0.75rem; color: var(--muted); }
+    .kioskSlipRefValue{ font-size:0.95rem; font-weight:900; color: var(--navy); margin-top:0.2rem; }
+
+    .kioskSlipTable{
+      display:flex;
+      flex-direction:column;
+      gap:0.6rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      margin-bottom: 0.9rem;
+    }
+
+    .kioskNextStepsBox{
+      background:#eef5ff;
+      border:1px solid #d9e8ff;
+      border-radius: var(--r-lg);
+      padding: 1rem 1rem 0.9rem;
+    }
+    .kioskNextStepsTitle{
+      font-weight: 900;
+      color: var(--navy);
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+    }
+
+    .kioskSlipFooterNote{
+      margin-top: 0.85rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-align:center;
+    }
+    .kioskSlipFooterTiny{
+      margin-top: 0.25rem;
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-align:center;
+    }
+
+    .kioskSlipActions{
+      width: 100%;
+      display:flex;
+      justify-content:center;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 40rem){
+      .kioskSlipActions{ flex-direction:column; }
+      .kioskSlipActions .btn{ width: 100%; }
+      .kioskSlipCard{ max-width: 100%; }
+    }
+
+    html.contrast .kioskSlipCard,
+    html.contrast .kioskSlipRefBox,
+    html.contrast .kioskNextStepsBox{
+      background:#fff !important;
+      border-color:#111 !important;
+      box-shadow:none !important;
+      outline: 2px solid #111;
+      outline-offset: 0;
+    }
+
+    /* =========================================================
+   Track page components (track.html)
+   ========================================================= */
+
+.kioskTrackPanel{
+  max-width: 44rem;
+  margin: 0 auto;
+}
+
+.kioskTrackForm{
+  display:flex;
+  flex-direction:column;
+  gap: 0.75rem;
+}
+
+.kioskTrackInputRow{
+  display:flex;
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.kioskTrackInput{
+  flex: 1;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.kioskTrackBtn{
+  min-width: 7.5rem;
+}
+
+/* Status message area (accessible updates) */
+.kioskTrackStatusMsg{
+  min-height: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.kioskTrackStatusMsg.is-ok{ color: var(--green); }
+.kioskTrackStatusMsg.is-warn{ color: #8a6b00; }
+.kioskTrackStatusMsg.is-err{ color: #b42318; }
+
+/* Result panel */
+.kioskTrackResult{
+  max-width: 44rem;
+  margin: 1rem auto 0;
+}
+
+.kioskTrackMeta{
+  display:flex;
+  flex-direction:column;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+}
+
+.kioskTrackMetaRow{
+  display:grid;
+  grid-template-columns: 10rem 1fr;
+  gap: 1rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.kioskTrackMetaRow:last-child{
+  border-bottom: 0;
+}
+
+.kioskTrackMetaKey{
+  color: var(--muted);
+}
+
+.kioskTrackMetaVal{
+  color: var(--text);
+  font-weight: 700;
+  word-break: break-word;
+}
+
+/* Timeline */
+.kioskTimeline{
+  list-style:none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+  display:flex;
+  flex-direction:column;
+  gap: 0.85rem;
+}
+
+.kioskTimelineItem{
+  position: relative;
+  display:grid;
+  grid-template-columns: 1.5rem 1fr;
+  gap: 0.75rem;
+  align-items:flex-start;
+}
+
+.kioskTimelineDot{
+  width: 1rem;
+  height: 1rem;
+  border-radius: 999px;
+  background: #fff;
+  border: 2px solid var(--border-strong);
+  margin-top: 0.2rem;
+  position: relative;
+}
+
+/* Vertical line */
+.kioskTimelineItem::before{
+  content:"";
+  position:absolute;
+  left: 0.5rem;
+  top: 1.2rem;
+  bottom: -0.95rem;
+  width: 2px;
+  background: var(--border);
+}
+
+.kioskTimelineItem:last-child::before{
+  display:none;
+}
+
+.kioskTimelineTitle{
+  font-weight: 900;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.kioskTimelineDesc{
+  color: var(--muted);
+  font-size: 0.82rem;
+  margin-top: 0.2rem;
+  line-height: 1.4;
+}
+
+/* State: done */
+.kioskTimelineItem.is-done .kioskTimelineDot{
+  background: var(--primary);
+  border-color: var(--primary);
+  box-shadow: var(--glow);
+}
+
+/* State: current */
+.kioskTimelineItem.is-current .kioskTimelineDot{
+  background: var(--primary-100);
+  border-color: var(--primary);
+  box-shadow: var(--glow);
+}
+.kioskTimelineItem.is-current .kioskTimelineTitle{
+  color: var(--navy);
+}
+
+/* Responsive */
+@media (max-width: 40rem){
+  .kioskTrackInputRow{
+    flex-direction: column;
+  }
+  .kioskTrackBtn{
+    width: 100%;
+  }
+  .kioskTrackMetaRow{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* High contrast */
+html.contrast .kioskTrackPanel,
+html.contrast .kioskTrackResult{
+  box-shadow: none;
+  border-color: #111;
+}
+
+html.contrast .kioskTimelineItem::before{
+  background: #111;
+}
+html.contrast .kioskTimelineDot{
+  border-color: #111;
+}
+html.contrast .kioskTimelineItem.is-done .kioskTimelineDot{
+  background: #111;
+  border-color: #111;
+  box-shadow: none;
+}
+html.contrast .kioskTimelineItem.is-current .kioskTimelineDot{
+  background: #fff;
+  border-color: #111;
+  box-shadow: none;
+}
+
+/* =========================================================
+   Mapping Module
+   ========================================================== */
+
+.mapPage{
+  max-width: 70rem;              /* match kioskMain--center width */
+  margin: 0 auto;
+  padding: 0 0 2.5rem;
+}
+
+.mapLayout{
+  display:grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.2fr);
+  gap: 1.5rem;
+  align-items:flex-start;
+}
+
+.mapCard{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.mapTitle{
+  text-align:center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+  color: var(--navy);
+}
+
+.mapCanvasWrapper{
+  display:flex;
+  gap: 0.75rem;
+  align-items:stretch;
+}
+
+.floorGuide{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;   /* line each label up with a row of pins */
+  align-items:flex-start;
+  font-size: 0.8rem;
+  color: var(--muted);
+  padding: 0.75rem 0;              /* more vertical space inside */
+  text-align:left;
+  min-width: 3.25rem;
+}
+
+.floorGuide span{
+  line-height: 1;
+}
+
+.mapCanvas{
+  position:relative;             /* required for absolute pins */
+  width: 100%;
+  height: 20rem;
+  border: 2px solid var(--border-strong);
+  border-radius: var(--r-lg);
+  background:#f9fafb;
+}
+
+/* Figma-style office avatar */
+.mapOfficeIcon{
+  width:2.5rem;
+  height:2.5rem;
+  border-radius:999px;
+  background: var(--primary-100);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.5rem;
+  color:var(--primary);
+}
+
+.mapOfficeIcon img{
+  width:72%;
+  height:72%;
+}
+
+/* Info row (hours + contact) */
+.mapInfoRow{
+  display:grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap:0.75rem;
+  margin-top:1rem;
+}
+
+.mapInfoBox{
+  border-radius: var(--r-lg);
+  padding:0.6rem 0.75rem;
+  border:1px solid var(--border);
+  font-size:0.8rem;
+}
+
+.mapInfoBox--blue{
+  background:#eef5ff;
+  border-color:#d9e8ff;
+}
+
+.mapInfoBox--green{
+  background:#eafaf2;
+  border-color:#cfeedd;
+}
+
+.mapInfoLabel{
+  display:block;
+  color:var(--muted);
+  margin-bottom:0.15rem;
+}
+
+.mapInfoValue{
+  font-weight:600;
+  color:var(--text);
+}
+
+/* Pin buttons: reset and absolutely position inside map */
+.pin{
+  position:absolute;
+  top:0;
+  left:0;
+  transform: translate(-50%, -50%);
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: 1.35rem;
+  color:#1f66ff;
+  cursor:pointer;
+
+  /* reset default button styles if element is <button> */
+  padding:0;
+  margin:0;
+  border:none;
+  background:none;
+  line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.pin img{
+  width:100%;
+  height:100%;
+  pointer-events:none;
+}
+
+.pin:hover{
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.pin.active{
+  color: var(--primary);
+  transform: translate(-50%, -50%) scale(1.12);
+  filter: drop-shadow(0 0.15rem 0.25rem rgba(14, 165, 106, 0.35));
+}
+
+/* Office title + description */
+#officeTitle{
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+  color: var(--navy);
+}
+
+#officeDesc{
+  font-size: 0.85rem;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+}
+
+/* Services list */
+.serviceList{
+  padding-left: 1.1rem;
+}
+
+.serviceList li{
+  margin-bottom: 0.35rem;
+  font-size: 0.82rem;
+}
+
+/* Office list grid */
+.officeList{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.officeItem{
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-lg);
+  padding: 0.85rem;
+  background:#fff;
+  cursor:pointer;
+  text-align:left;
+  transition: background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+.officeItem:hover{
+  box-shadow: var(--shadow);
+}
+
+.officeItem.active{
+  background: var(--primary-100);
+  border-color: var(--primary);
+}
+
+/* Responsive */
+@media (max-width: 56rem){
+  .mapLayout{ grid-template-columns: 1fr; }
+  .mapInfoRow{ grid-template-columns: 1fr; }
+}
+
+/* High contrast */
+html.contrast .mapCard,
+html.contrast .officeItem{
+  background:#fff !important;
+  border-color:#111 !important;
+  box-shadow:none !important;
+  outline:2px solid #111;
+  outline-offset:0;
+}
+
+html.contrast .pin{
+  color:#111 !important;
+}
+
+
+/* =========================================================
+   Footer (single source of truth)
+   ========================================================= */
+
+.kioskFooter{
+  border-top: 0.0625rem solid var(--border);
+  background:#fff;
+  padding: 0.75rem 1.125rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap: 0.75rem;
+  color:var(--muted);
+  font-size: 0.75rem;
+}
+
+.kioskFooterLinks{
+  display:flex;
+  align-items:center;
+  gap: 0.4rem;
+}
+
+.kioskFooter a{
+  color:#334;
+  text-decoration:none;
+}
+
+.kioskFooter a:hover,
+.kioskFooter a:focus-visible{
+  text-decoration:underline;
+  color: var(--primary);
+}
+
+/* =========================================================
+   High Contrast (outline only, keep colors)
+   ========================================================= */
+
+html.contrast{
+  --hc: #111;
+  --hc-w: 2px;
+}
+
+html.contrast .appHeader,
+html.contrast .kioskNote,
+html.contrast .kioskPanel{
+  border-color: var(--hc);
+  box-shadow: none;
+}
+
+html.contrast .chip{
+  outline: var(--hc-w) solid var(--hc);
+  outline-offset: 0;
+  box-shadow: none;
+}
+
+html.contrast .kioskCard,
+html.contrast .kioskServiceCard{
+  outline: var(--hc-w) solid var(--hc);
+  outline-offset: 0;
+  box-shadow: none;
+}
+
+html.contrast .kioskIcon,
+html.contrast .kioskServiceIcon{
+  outline: var(--hc-w) solid var(--hc);
+  outline-offset: 0;
+}
+
+html.contrast .kioskStepNumber{
+  box-shadow: none;
+  border-color: var(--hc);
+}

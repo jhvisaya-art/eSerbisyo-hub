@@ -1,0 +1,19 @@
+# Render Blueprint — defines the web service in render.com
+# Push this to your repo root and Render will offer to create both services automatically.
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: eserbisyo-hub
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DATABASE_URL
+        # Paste the External Database URL from your Render Postgres dashboard here,
+        # OR (preferred) leave this blank and link the database in the Render UI
+        # via "Connect a database" — it injects DATABASE_URL automatically.
+        sync: false
+    healthCheckPath: /api/public/health.php

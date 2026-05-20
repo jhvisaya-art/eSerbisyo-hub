@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Municipal Map & Information</title>
+
+  <!-- Global kiosk styles -->
+  <link rel="stylesheet" href="../assets/css/kiosk.css" />
+</head>
+
+<body class="kioskPage">
+
+  <!-- HEADER -->
+  <header class="appHeader">
+    <div class="brand">
+      <img class="brandLockup" src="../assets/img/eserbisyo-lockup-light.png" alt="eSerbisyo Hub" />
+    </div>
+
+    <div class="kioskHeaderRight"></div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="kioskMain kioskMain--center">
+
+    <!-- Intro -->
+    <section class="kioskIntro">
+      <h1 class="kioskPageTitle">Municipal Map &amp; Information</h1>
+      <p class="kioskPageSub">
+        Municipality of San Fernando, Camarines Sur<br>
+        Hanapin ang mga opisina at serbisyong munisipal
+      </p>
+    </section>
+
+    <!-- MAP PAGE -->
+    <section class="mapPage">
+
+      <!-- Top layout: map + details -->
+      <div class="mapLayout">
+
+        <!-- MAP CARD -->
+        <article class="mapCard mapCard--map">
+          <h3 class="mapTitle">Municipal Hall Map</h3>
+
+          <div class="mapCanvasWrapper">
+            <div class="floorGuide">
+              <span>3rd Floor</span>
+              <span>2nd Floor</span>
+              <span>1st Floor</span>
+            </div>
+
+            <div class="mapCanvas" id="mapCanvas"></div>
+          </div>
+
+          <p class="mapHint">Tap on a location to view details</p>
+        </article>
+
+        <!-- DETAILS CARD -->
+        <article class="mapCard mapCard--details">
+
+          <header style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
+            <div class="mapOfficeIcon" aria-hidden="true">
+              <img src="../assets/img/icons/location.png" alt="" />
+            </div>
+            <div>
+              <h2 id="officeTitle">Select an Office</h2>
+              <p id="officeDesc">
+                Tap a pin on the map or choose from the list below to view office details and services.
+              </p>
+            </div>
+          </header>
+
+          <ul id="officeServices" class="serviceList"></ul>
+
+          <div class="mapInfoRow">
+            <div class="mapInfoBox mapInfoBox--blue">
+              <span class="mapInfoLabel">Office Hours</span>
+              <span class="mapInfoValue" id="officeHours">Mon–Fri • 8:00 AM – 5:00 PM</span>
+            </div>
+            <div class="mapInfoBox mapInfoBox--green">
+              <span class="mapInfoLabel">Contact Number</span>
+              <span class="mapInfoValue" id="officePhone">(123) 456‑7890</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- OFFICE LIST CARD -->
+      <article class="mapCard" style="margin-top:1.25rem;">
+        <h3 class="mapTitle" style="text-align:left;">All Offices &amp; Services</h3>
+        <div class="officeList" id="officeList"></div>
+      </article>
+
+      <!-- Back button -->
+      <div class="kioskBottomActions">
+        <a href="index.html" class="btn ghost kioskBackBtn">
+          ← Back to Home / Bumalik
+        </a>
+      </div>
+
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="kioskFooter">
+    <div class="kioskFooterLinks">
+      <a href="#">Help &amp; Support</a>
+      <span>•</span>
+      <a href="#">Privacy Notice</a>
+    </div>
+    <div class="kioskFooterCopy">
+      © 2026 Municipal Government. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- MAP SCRIPT -->
+  <script>
+    /* =======================
+       OFFICE DATA
+    ======================= */
+    const OFFICES = [
+      {
+        id: 'treasurer',
+        name: 'Treasurer’s Office',
+        floor: '1st Floor, Room 101',
+        x: 30, y: 75,
+        phone: '(123) 456‑7890',
+        hours: 'Mon–Fri • 8:00 AM – 5:00 PM',
+        services: ['Cedula', 'Payments', 'Fees Collection']
+      },
+      {
+        id: 'assessor',
+        name: 'Assessor’s Office',
+        floor: '1st Floor, Room 103',
+        x: 55, y: 65,
+        phone: '(123) 456‑7891',
+        hours: 'Mon–Fri • 8:00 AM – 5:00 PM',
+        services: ['Property Assessment', 'Tax Mapping']
+      },
+      {
+        id: 'health',
+        name: 'Municipal Health Office',
+        floor: '1st Floor, Room 105',
+        x: 75, y: 70,
+        phone: '(123) 456‑7892',
+        hours: 'Mon–Fri • 8:00 AM – 5:00 PM',
+        services: ['Medical Records', 'Health Certificates']
+      },
+      {
+        id: 'civil',
+        name: 'Civil Registry Office',
+        floor: '2nd Floor, Room 201',
+        x: 35, y: 40,
+        phone: '(123) 456‑7893',
+        hours: 'Mon–Fri • 8:00 AM – 5:00 PM',
+        services: ['Birth Certificate', 'Marriage Certificate', 'Death Records']
+      },
+      {
+        id: 'social',
+        name: 'Social Welfare Office',
+        floor: '2nd Floor, Room 206',
+        x: 70, y: 45,
+        phone: '(123) 456‑7894',
+        hours: 'Mon–Fri • 8:00 AM – 5:00 PM',
+        services: ['Senior Citizen ID', 'PWD Assistance']
+      },
+      {
+        id: 'mayor',
+        name: 'Mayor’s Office',
+        floor: '3rd Floor, Room 301',
+        x: 55, y: 20,
+        phone: '(123) 456‑7895',
+        hours: 'Mon–Fri • 8:00 AM – 5:00 PM',
+        services: ['Clearances', 'Appointments']
+      }
+    ];
+
+    const map = document.getElementById('mapCanvas');
+    const list = document.getElementById('officeList');
+
+    /* =======================
+       SELECT OFFICE
+    ======================= */
+    function selectOffice(id) {
+      document.querySelectorAll('.pin, .officeItem')
+        .forEach(el => el.classList.remove('active'));
+
+      const office = OFFICES.find(o => o.id === id);
+      if (!office) return;
+
+      document.getElementById('officeTitle').textContent = office.name;
+      document.getElementById('officeDesc').textContent = office.floor;
+      document.getElementById('officeHours').textContent = office.hours;
+      document.getElementById('officePhone').textContent = office.phone;
+
+      const ul = document.getElementById('officeServices');
+      ul.innerHTML = '';
+      office.services.forEach(s => {
+        const li = document.createElement('li');
+        li.textContent = s;
+        ul.appendChild(li);
+      });
+
+      document.getElementById('pin-' + id).classList.add('active');
+      document.getElementById('item-' + id).classList.add('active');
+    }
+
+    /* =======================
+       CREATE PINS + LIST
+    ======================= */
+    OFFICES.forEach(o => {
+      const pin = document.createElement('button');
+      pin.type = 'button';
+      pin.className = 'pin';
+      pin.id = 'pin-' + o.id;
+      pin.style.left = o.x + '%';
+      pin.style.top = o.y + '%';
+      pin.setAttribute('aria-label', o.name + ' (' + o.floor + ')');
+      pin.innerHTML = '<img src="../assets/img/icons/location.png" alt="" />';
+      pin.onclick = () => selectOffice(o.id);
+      map.appendChild(pin);
+
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'officeItem';
+      card.id = 'item-' + o.id;
+      card.innerHTML = `<strong>${o.name}</strong><br><span style="font-size:0.8rem;color:var(--muted);">${o.floor}</span>`;
+      card.onclick = () => selectOffice(o.id);
+      list.appendChild(card);
+    });
+
+    /* =======================
+       SELECT OFFICE
+    ======================= */
+
+    // Select first office by default
+    selectOffice('treasurer');
+  </script>
+</body>
+</html>

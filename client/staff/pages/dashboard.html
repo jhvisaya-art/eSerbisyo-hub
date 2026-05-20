@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>eSerbisyo Hub - Staff Dashboard</title>
+  <link rel="stylesheet" href="../assets/css/staff.css" />
+  <style>
+    /* ── Status badge pills ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge::before {
+      content: "";
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+    .badge-queued      { background:#f1f5f9; color:#475569; }
+    .badge-review      { background:#eff6ff; color:#1d4ed8; }
+    .badge-payment     { background:#fff7ed; color:#c2410c; }
+    .badge-inprocess   { background:#fefce8; color:#a16207; }
+    .badge-ready       { background:#f0fdf4; color:#15803d; }
+    .badge-released    { background:#f8fafc; color:#64748b; }
+
+    /* ── Action button inside modal ── */
+    .actionBlock {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: var(--r-lg);
+      border: 0.0625rem solid var(--border);
+      background: #f8fafc;
+    }
+    .actionBlock .actionHint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+      line-height: 1.4;
+    }
+    .actionBlock .actionFields {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .actionBlock .fieldRow {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+    .actionBlock .fieldLabel {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+    .actionBtn {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: var(--r-md);
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: filter 0.15s;
+    }
+    .actionBtn:hover { filter: brightness(0.94); }
+    .actionBtn.review    { background:#1d4ed8; color:#fff; }
+    .actionBtn.payment   { background:#ea580c; color:#fff; }
+    .actionBtn.confirm   { background:#d97706; color:#fff; }
+    .actionBtn.ready     { background:#16a34a; color:#fff; }
+    .actionBtn.release   { background:#0ea56a; color:#fff; }
+    .actionBtn.done      { background:#e2e8f0; color:#64748b; cursor:default; }
+
+    /* ── Note field ── */
+    .noteArea {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 0.0625rem solid var(--border);
+    }
+    .noteArea .fieldLabel { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.3rem; }
+    .noteRow { display:flex; gap:0.5rem; }
+    .noteRow .input { flex:1; min-width:0; font-size:0.875rem; }
+    .noteRow .btn { font-size:0.875rem; padding:0.5rem 0.75rem; }
+
+    /* ── Timeline in modal ── */
+    .timeline { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.6rem; }
+    .tlItem { display:grid; grid-template-columns:0.75rem 1fr; gap:0.6rem; align-items:flex-start; }
+    .tlDot { width:0.6rem; height:0.6rem; border-radius:50%; margin-top:0.25rem; background:var(--border-strong); }
+    .tlItem.latest .tlDot { background:var(--primary); }
+    .tlStatus { font-size:0.82rem; font-weight:700; color:var(--text); }
+    .tlMeta { font-size:0.75rem; color:var(--muted); margin-top:0.1rem; }
+
+    /* ── Inline message ── */
+    .inlineMsg { font-size:0.82rem; margin-top:0.5rem; min-height:1rem; }
+    .inlineMsg.ok  { color:#15803d; }
+    .inlineMsg.err { color:#b91c1c; }
+
+    /* ── Responsive modal body ── */
+    @media (max-width: 36rem) {
+      .actionBlock .fieldRow { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="appHeader">
+    <div class="brand">
+      <img class="brandLockup" src="../assets/img/eserbisyo-lockup-light.png" alt="eSerbisyo Hub" />
+    </div>
+    <div class="headerRight">
+      <button id="logoutBtn" class="btn danger" type="button">Logout</button>
+    </div>
+  </header>
+
+  <main class="appShell">
+
+    <!-- Sidebar nav — labels match actual DB statuses -->
+    <aside class="nav">
+      <div class="navTitle">Filter by status</div>
+      <button class="navItem active" type="button" data-status="">All Requests</button>
+      <button class="navItem" type="button" data-status="Queued">Queued</button>
+      <button class="navItem" type="button" data-status="Under Review">Under Review</button>
+      <button class="navItem" type="button" data-status="For Payment Verification">For Payment</button>
+      <button class="navItem" type="button" data-status="In Process">In Process</button>
+      <button class="navItem" type="button" data-status="Ready for Release">Ready for Release</button>
+      <button class="navItem" type="button" data-status="Released">Released</button>
+      <!-- ADMIN only — shown via JS after login -->
+      <hr id="adminNavDivider" style="display:none;border:none;border-top:0.0625rem solid var(--border);margin:0.5rem 0;" />
+      <a class="navItem" id="navAccounts" href="./accounts.html"
+         style="display:none;color:var(--navy);font-weight:700;text-decoration:none;">
+        &#9881; Manage Accounts
+      </a>
+    </aside>
+
+    <section class="main">
+
+      <!-- KPI row -->
+      <div class="statsRow" id="kpis"></div>
+
+      <!-- Table panel -->
+      <div class="panel">
+        <div class="panelHead">
+          <div>
+            <div class="panelTitle" id="panelTitle">All Requests</div>
+            <div class="panelSub" id="panelSub">Click a row to open and act on a request</div>
+          </div>
+          <div class="panelTools">
+            <input id="search" class="input" placeholder="Search ref / name / mobile" />
+            <button id="refresh" class="btn" type="button">Refresh</button>
+            <!-- Export controls -->
+            <div id="exportControls">
+              <select id="exportMonth" class="input" style="width:auto;font-size:0.875rem;padding:0.4rem 0.625rem;" title="Month to export">
+                <option value="01">January</option><option value="02">February</option>
+                <option value="03">March</option><option value="04">April</option>
+                <option value="05">May</option><option value="06">June</option>
+                <option value="07">July</option><option value="08">August</option>
+                <option value="09">September</option><option value="10">October</option>
+                <option value="11">November</option><option value="12">December</option>
+              </select>
+              <input id="exportYear" class="input" type="number" min="2020" max="2099"
+                     style="width:5.5rem;font-size:0.875rem;padding:0.4rem 0.625rem;" title="Year to export" />
+              <button id="btnExport" class="btn" type="button" title="Export Released records to Excel">&#8595; Export Excel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter bar (Strategy 3 — date range + Strategy 2 — archive toggle) -->
+        <div class="filterBar" id="filterBar">
+          <span class="filterLabel">Date filed:</span>
+          <input id="dateFrom" class="input filterInput" type="date" title="From date" />
+          <span class="filterSep">–</span>
+          <input id="dateTo"   class="input filterInput" type="date" title="To date" />
+          <button id="btnApplyFilter" class="btn" type="button">Apply</button>
+          <button id="btnClearFilter" class="btn ghost" type="button">Clear</button>
+          <label class="filterArchiveToggle" id="archiveToggleWrap" style="display:none;">
+            <input type="checkbox" id="showArchived" />
+            Show archived
+          </label>
+        </div>
+
+        <div class="tableWrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Ref No.</th>
+                <th>Name</th>
+                <th>Service</th>
+                <th>Filed</th>
+                <th>Status</th>
+                <th>Payment</th>
+                <th class="noWrap">Action</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+
+        <!-- Pagination bar (Strategy 1) -->
+        <div class="paginationBar" id="paginationBar">
+          <button class="btn ghost" id="btnPrevPage" type="button">&#8592; Prev</button>
+          <span class="pageInfo" id="pageInfo">Page 1</span>
+          <button class="btn ghost" id="btnNextPage" type="button">Next &#8594;</button>
+        </div>
+
+        <p id="msg" class="msg"></p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal — one action at a time based on status -->
+  <div class="modalOverlay" id="modalOverlay" hidden>
+    <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button type="button" class="modalClose" id="modalCloseBtn" aria-label="Close">&times;</button>
+
+      <!-- Header: name + ref + status badge -->
+      <div class="modalHead">
+        <div>
+          <div class="modalTitle" id="modalTitle">Request Details</div>
+          <div class="modalRef" id="modalRef">&mdash;</div>
+        </div>
+        <span class="badge" id="modalBadge">&mdash;</span>
+      </div>
+
+      <div class="modalBody">
+
+        <!-- Applicant info (read-only) -->
+        <div class="infoBox">
+          <div class="infoTitle">Applicant Information</div>
+          <div class="infoGrid">
+            <div><div class="label">Name</div><div class="value" id="mName">—</div></div>
+            <div><div class="label">Service</div><div class="value" id="mService">—</div></div>
+            <div><div class="label">Mobile</div><div class="value" id="mMobile">—</div></div>
+            <div><div class="label">Date Filed</div><div class="value" id="mDate">—</div></div>
+            <div style="grid-column:1/-1;"><div class="label">Address</div><div class="value" id="mAddress">—</div></div>
+          </div>
+        </div>
+
+        <!-- Next Action block -->
+        <div class="section">
+          <div class="sectionTitle">Next Action</div>
+
+          <div class="actionBlock" id="action-queued" hidden>
+            <p class="actionHint">This request is waiting in the queue. Start reviewing it to begin processing.</p>
+            <button class="actionBtn review" id="btnStartReview">Start Review</button>
+          </div>
+
+          <div class="actionBlock" id="action-review" hidden>
+            <p class="actionHint">Review the applicant&apos;s information, then send it for payment once confirmed correct.</p>
+            <button class="actionBtn payment" id="btnSendPayment">Send for Payment Verification</button>
+          </div>
+
+          <div class="actionBlock" id="action-payment" hidden>
+            <p class="actionHint">Enter the OR number and amount from the Treasurer&apos;s Office to confirm payment.</p>
+            <div class="actionFields">
+              <div class="fieldRow">
+                <div>
+                  <div class="fieldLabel">OR Number</div>
+                  <input class="input" id="payOrNo" placeholder="e.g. OR-2026-001" style="width:100%;" />
+                </div>
+                <div>
+                  <div class="fieldLabel">Amount Paid (PHP)</div>
+                  <input class="input" id="payAmount" type="number" min="0" step="0.01" placeholder="0.00" style="width:100%;" />
+                </div>
+              </div>
+            </div>
+            <button class="actionBtn confirm" id="btnConfirmPayment">Confirm Payment</button>
+          </div>
+
+          <div class="actionBlock" id="action-inprocess" hidden>
+            <p class="actionHint">Mark the document as ready and send an SMS notification to the applicant.</p>
+            <button class="actionBtn ready" id="btnMarkReady">Mark Ready &amp; Send SMS</button>
+          </div>
+
+          <div class="actionBlock" id="action-ready" hidden>
+            <p class="actionHint">The applicant has been notified. Confirm that the document has been claimed.</p>
+            <button class="actionBtn release" id="btnRelease">Release Document</button>
+          </div>
+
+          <div class="actionBlock" id="action-released" hidden>
+            <p class="actionHint" style="text-align:center; color:#15803d;">
+              &#10003; This request has been completed and released.
+            </p>
+            <button class="actionBtn done" disabled>Document Released</button>
+          </div>
+
+          <!-- Archive toggle — ADMIN only, shown for Released records -->
+          <div id="archiveBlock" hidden>
+            <button class="btn ghost" type="button" id="btnArchiveToggle" style="width:100%;margin-top:0.5rem;">
+              Archive this record
+            </button>
+            <p class="inlineMsg" id="archiveMsg"></p>
+          </div>
+
+          <p class="inlineMsg" id="actionMsg"></p>
+        </div>
+
+        <!-- Note + history -->
+        <div class="section">
+          <div class="sectionTitle">Notes &amp; History</div>
+          <div class="noteArea">
+            <div class="fieldLabel">Add a note</div>
+            <div class="noteRow">
+              <input class="input" id="mNote" placeholder="Optional note for this request..." />
+              <button class="btn" type="button" id="btnAddNote">Add</button>
+            </div>
+          </div>
+          <div class="historyBox" id="mHistory" style="margin-top:0.75rem;">Loading...</div>
+        </div>
+
+        <div class="modalActions">
+          <button type="button" class="btn ghost" id="btnCloseModal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="../assets/js/a11y-prefs.js"></script>
+  <script type="module" src="../assets/js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!-- FILE: C:\xampp\htdocs\eserbisyo-hub\client\kiosk\pages\index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>eSerbisyo Hub - Kiosk</title>
+  <link rel="stylesheet" href="../assets/css/kiosk.css" />
+</head>
+
+<body class="kioskPage">
+  <header class="appHeader">
+    <div class="brand">
+      <img class="brandLockup" src="../assets/img/eserbisyo-lockup-light.png" alt="eSerbisyo Hub" />
+    </div>
+
+    <div class="kioskHeaderRight"></div>
+  </header>
+
+  <main class="kioskMain">
+    <section class="kioskHero" aria-label="Kiosk welcome">
+      <h1>Welcome to eSerbisyo Hub</h1>
+      <p>Choose a service below to get started / Pumili ng serbisyo para magsimula</p>
+    </section>
+
+    <section class="kioskGrid" aria-label="Kiosk services">
+      <a class="kioskCard green" href="./request-step1.html">
+        <div class="kioskIcon" aria-hidden="true">
+          <img src="../assets/img/icons/document.png" alt="" />
+        </div>
+        <h2 class="kioskCardTitle">Request Documents &amp; Renewals</h2>
+        <p class="kioskCardText">Apply for certificates, clearances, permits, and other municipal documents</p>
+      </a>
+
+      <a class="kioskCard blue" href="./track.html">
+        <div class="kioskIcon" aria-hidden="true">
+          <img src="../assets/img/icons/magnifying-glass.png" alt="" />
+        </div>
+        <h2 class="kioskCardTitle">Track My Request</h2>
+        <p class="kioskCardText">Check the status of your pending document requests</p>
+      </a>
+
+      <a class="kioskCard orange" href="./municipal-map.html">
+        <div class="kioskIcon" aria-hidden="true">
+          <img src="../assets/img/icons/location.png" alt="" />
+        </div>
+        <h2 class="kioskCardTitle">Municipal Map &amp; Information</h2>
+        <p class="kioskCardText">Find municipal offices, services, and contact information</p>
+      </a>
+    </section>
+
+    <div class="kioskNote" role="note">
+      <strong>Note / Paalala:</strong>
+      For payment, please bring your printed payment slip to the Municipal Treasurer’s Office.
+      You will receive an SMS notification when your document is ready for pickup.
+    </div>
+  </main>
+
+  <footer class="kioskFooter">
+    <div>
+      <a href="./help.html">Help &amp; Support</a>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <a href="./privacy.html">Privacy Notice</a>
+    </div>
+    <div>© 2026 Municipal Government. All rights reserved.</div>
+  </footer>
+
+  <!-- Reuse the same toggle script used by staff -->
+  <script src="../../staff/assets/js/a11y-prefs.js"></script>
+</body>
+</html>

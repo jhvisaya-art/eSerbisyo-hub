@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>eSerbisyo Hub - Step 2 (Details)</title>
+  <link rel="stylesheet" href="../assets/css/kiosk.css" />
+</head>
+<body>
+  <div class="kioskPage">
+    <header class="appHeader">
+      <div class="brand">
+        <img class="brandLockup" src="../assets/img/eserbisyo-lockup-light.png" alt="eSerbisyo Hub" />
+      </div>
+      <div class="kioskHeaderRight"></div>
+    </header>
+
+    <main class="kioskMain">
+      <section class="kioskSteps">
+        <ol class="kioskStepList">
+          <li class="kioskStep"><span class="kioskStepNumber">&check;</span><span class="kioskStepLabel">Service &amp; Info</span></li>
+          <li class="kioskStep is-active"><span class="kioskStepNumber">2</span><span class="kioskStepLabel">Details</span></li>
+          <li class="kioskStep"><span class="kioskStepNumber">3</span><span class="kioskStepLabel">Confirm &amp; Print</span></li>
+        </ol>
+      </section>
+
+      <section class="kioskIntro">
+        <p class="kioskStepKicker">Step 2 of 3: Personal Details</p>
+        <h1 class="kioskPageTitle">Enter Your Information</h1>
+        <p class="kioskPageSub">Complete your details to continue.</p>
+      </section>
+
+      <section class="kioskPanel" role="form">
+        <form id="requestForm" novalidate>
+          <div class="kioskFormSection">
+            <div class="kioskFormSectionTitle">Personal Information</div>
+            <div class="kioskField">
+              <label for="lastName">Last Name <span aria-hidden="true">*</span></label>
+              <input class="input" id="lastName" type="text" name="last_name" required />
+              <div class="kioskFieldHint">Family name / Apelyido</div>
+            </div>
+
+            <div class="kioskField">
+              <label for="firstName">First Name <span aria-hidden="true">*</span></label>
+              <input class="input" id="firstName" type="text" name="first_name" required />
+              <div class="kioskFieldHint">Given name / Pangalan</div>
+            </div>
+
+            <div class="kioskField">
+              <label for="middleName">Middle Name</label>
+              <input class="input" id="middleName" type="text" name="middle_name" />
+              <div class="kioskFieldHint">Optional / Opsyonal</div>
+            </div>
+          </div>
+
+          <div class="kioskFormSection">
+            <div class="kioskFormSectionTitle">Address</div>
+            <div class="kioskField">
+              <label for="address">Complete Address <span aria-hidden="true">*</span></label>
+              <input class="input" id="address" type="text" name="address_line" required placeholder="House #, Street, Barangay, Municipality" />
+              <div class="kioskFieldHint">Include House #, Street, Barangay / Isama ang buong address</div>
+            </div>
+          </div>
+
+          <div class="kioskFormSection">
+            <div class="kioskFormSectionTitle">Contact Information</div>
+            <div class="kioskField">
+              <label for="mobile">Mobile Number <span aria-hidden="true">*</span></label>
+              <input class="input" id="mobile" type="tel" name="mobile_no" pattern="^(09)\d{9}$" placeholder="09XXXXXXXXX" required />
+              <div class="kioskFieldHint">For SMS notifications / Para sa SMS notification</div>
+            </div>
+
+          </div>
+
+          <div class="kioskDataPrivacy">
+            <div class="kioskDataPrivacyHeader">
+              <div class="kioskDataPrivacyIcon" aria-hidden="true">
+                <img src="../assets/img/icons/document.png" alt="" />
+              </div>
+              <div class="kioskDataPrivacyTitle">Data Privacy Act Notice</div>
+            </div>
+            <p>Your personal information will be collected and processed in accordance with Republic Act No. 10173 Data Privacy Act of 2012 and will be used for processing your request.</p>
+          </div>
+
+          <div class="kioskConsent kioskConsent--big">
+            <input id="consent" name="consent_privacy" type="checkbox" required />
+            <label for="consent">I agree and consent to the collection and processing of my personal data <span aria-hidden="true">*</span></label>
+          </div>
+
+          <div class="kioskFormActions">
+            <a href="request-step1.html" class="btn ghost">&larr; Back</a>
+            <button type="submit" class="btn primary" id="btnConfirm">Continue to Confirm &amp; Print</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer class="kioskFooter">
+      <div class="kioskFooterLinks">
+        <a href="#">Help &amp; Support</a> &bull; <a href="#">Privacy Notice</a>
+      </div>
+      <div class="kioskFooterCopy">&copy; 2026 Municipal Government. All rights reserved.</div>
+    </footer>
+  </div>
+
+  <script src="../../staff/assets/js/a11y-prefs.js"></script>
+  <script>
+    const serviceCode = sessionStorage.getItem('selectedService');
+    if (!serviceCode) {
+      window.location.href = 'request-step1.html';
+    }
+
+    const form = document.getElementById('requestForm');
+
+    function collectFormData() {
+      return {
+        service_code: serviceCode,
+        last_name: document.getElementById('lastName').value.trim(),
+        first_name: document.getElementById('firstName').value.trim(),
+        middle_name: document.getElementById('middleName').value.trim(),
+        address_line: document.getElementById('address').value.trim(),
+        mobile_no: document.getElementById('mobile').value.trim(),
+        consent_privacy: document.getElementById('consent').checked ? 1 : 0
+      };
+    }
+
+    // Keep a draft while typing so Confirm & Print (Step 3) can use it.
+    form.addEventListener('input', () => {
+      sessionStorage.setItem('requestForm', JSON.stringify(collectFormData()));
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = collectFormData();
+
+      const errors = [];
+      if (!data.service_code) errors.push('Service is required.');
+      if (!data.last_name) errors.push('Last name is required.');
+      if (!data.first_name) errors.push('First name is required.');
+      if (!data.address_line) errors.push('Address is required.');
+      if (!data.mobile_no || !/^09\d{9}$/.test(data.mobile_no)) errors.push('Valid mobile number required.');
+      if (!data.consent_privacy) errors.push('Privacy consent is required.');
+
+      if (errors.length) {
+        alert('Please fix: ' + errors.join('; '));
+        return;
+      }
+
+      // Ensure stale references from previous attempts do not carry forward.
+      sessionStorage.removeItem('requestRef');
+      sessionStorage.removeItem('requestLastName');
+      sessionStorage.removeItem('requestMobile');
+
+      sessionStorage.setItem('requestForm', JSON.stringify(data));
+      window.location.href = 'request-step3.html';
+    });
+
+    const draft = sessionStorage.getItem('requestForm');
+    if (draft) {
+      try {
+        const d = JSON.parse(draft);
+        if (d.last_name) document.getElementById('lastName').value = d.last_name;
+        if (d.first_name) document.getElementById('firstName').value = d.first_name;
+        if (d.middle_name) document.getElementById('middleName').value = d.middle_name;
+        if (d.address_line) document.getElementById('address').value = d.address_line;
+        if (d.mobile_no) document.getElementById('mobile').value = d.mobile_no;
+        if (d.consent_privacy) document.getElementById('consent').checked = true;
+      } catch (e) {
+      }
+    } else {
+      sessionStorage.setItem('requestForm', JSON.stringify({ service_code: serviceCode }));
+    }
+  </script>
+</body>
+</html>
