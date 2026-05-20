@@ -1,7 +1,7 @@
 RewriteEngine On
 
-# Strip /eserbisyo-hub/ prefix from any incoming request
-RewriteRule ^eserbisyo-hub/(.*)$ /$1 [L,R=301]
+# Internal rewrite: strip /eserbisyo-hub/ prefix without telling the browser
+RewriteRule ^eserbisyo-hub/(.*)$ /$1 [L]
 
-# Redirect bare root to kiosk landing
-RewriteRule ^$ /client/kiosk/pages/index.html [L,R=302]
+# Internal rewrite: bare root serves the kiosk landing
+RewriteRule ^$ client/kiosk/pages/index.html [L]
