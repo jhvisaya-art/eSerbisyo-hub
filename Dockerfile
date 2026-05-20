@@ -6,7 +6,7 @@ FROM php:8.2-apache
 
 # Install the PostgreSQL PDO driver (this is the key piece — base image has MySQL but not pgsql)
 RUN apt-get update \
- && apt-get install -y --no-install-recommends libpq-dev \
+ && apt-get install -y --no-install-recommends libpq-dev git unzip \
  && docker-php-ext-install pdo pdo_pgsql pgsql \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
